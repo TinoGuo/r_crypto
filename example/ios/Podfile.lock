@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - r_crypto (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - r_crypto (from `.symlinks/plugins/r_crypto/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  r_crypto:
+    :path: ".symlinks/plugins/r_crypto/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  r_crypto: b2183f419d84c15727857f26616709ede0610b09
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.3
