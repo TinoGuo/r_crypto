@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:convert/convert.dart' as convert;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +24,27 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
   }
 
+  List<int> decode(String input) => convert.hex.decode(input);
+
   initPlatformState() {
-    String platformVersion;
-    platformVersion = rCrypto.hmac(Digest.sha512, '12345', 'hello');
+    List<int> key = decode("feffe9928665731c6d6a8f9467308308");
+    List<int> iv = decode("cafebabefacedbaddecaf888");
+    List<int> add = decode("feedfacedeadbeeffeedfacedeadbeefabaddad2");
+    Blowfish blowfish = Blowfish.init("hello");
+    String encrypted = blowfish.encrypt("world");
+    print("encrypted: $encrypted");
+    String decrypted = blowfish.decrypt(encrypted);
+    print("decrypted: $decrypted");
+    blowfish.close();
+
+    // platformVersion = aesGcm.encrypt(
+    //   "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39",
+    //   "5bc94fbc3221a5db94fae95ae7121a47",
+    // );
 
     setState(() {
-      _platformVersion = platformVersion;
+      _platformVersion = encrypted;
+      // aesGcm.close();
     });
   }
 

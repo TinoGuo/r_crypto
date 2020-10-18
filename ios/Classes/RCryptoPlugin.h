@@ -3,6 +3,16 @@
 @interface RCryptoPlugin : NSObject<FlutterPlugin>
 @end
 
+char *blowfish_decrypt(unsigned char *ptr, const char *input_p);
+
+void blowfish_destroy(unsigned char *ptr);
+
+char *blowfish_encrypt(unsigned char *ptr, const char *input_p);
+
+unsigned char *blowfish_new(const char *key_p);
+
+char *hmac(const char *name, const char *key, const char *input);
+
 char *keccak224(const char *input);
 
 char *keccak256(const char *input);
@@ -40,6 +50,3 @@ char *sha512_trunc256(const char *input);
 char *shake_128(const char *input);
 
 char *shake_256(const char *input);
-
-char *hmac(const char *name, const char *key, const char *input);
-

@@ -1,7 +1,9 @@
 part of 'r_crypto_impl.dart';
 
-typedef RustMd5Func = Pointer<Utf8> Function(Pointer<Utf8>);
-typedef RustMd5FuncNative = Pointer<Utf8> Function(Pointer<Utf8>);
+mixin _Md5 {
+  final _rustMd5 = lazyOf(() => nativeLib
+      .lookup<NativeFunction<RustSingleUtf8FuncNative>>("md5")
+      .asFunction<RustSingleUtf8Func>());
 
-final RustMd5Func rustMd5 =
-    nativeLib.lookup<NativeFunction<RustMd5FuncNative>>("md5").asFunction();
+  String md5(String input) => loader.executeBlock(input, _rustMd5());
+}

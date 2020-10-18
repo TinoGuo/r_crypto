@@ -1,21 +1,15 @@
 import 'dart:ffi';
-
-import 'package:ffi/ffi.dart';
+asic/lazy.dart';
 import 'package:r_crypto/src/basic/loader.dart';
 
 part 'hmac.dart';
 part 'md5.dart';
 part 'sha1.dart';
+part 'sha2.dart';
+part 'sha3.dart';
 
-final rCrypto = RCrypto._();
+final rCrypto = _RCrypto._();
 
-class RCrypto with Loader {
-  RCrypto._();
-
-  String md5(String input) => executeBlock(input, rustMd5);
-
-  String sha1(String input) => executeBlock(input, rustSha1);
-
-  String hmac(Digest digest, String key, String input) =>
-      executeBlock3(digest.name, key, input, rustHmac);
+class _RCrypto with _Md5, _Sha1, _Sha2, _Sha3, _Hmac {
+  _RCrypto._();
 }

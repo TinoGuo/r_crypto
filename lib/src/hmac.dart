@@ -1,19 +1,13 @@
 part of 'r_crypto_impl.dart';
 
-typedef RustHmacFunc = Pointer<Utf8> Function(
-    Pointer<Utf8>, Pointer<Utf8>, Pointer<Utf8>);
-typedef RustHmacFuncNative = Pointer<Utf8> Function(
-    Pointer<Utf8>, Pointer<Utf8>, Pointer<Utf8>);
+mixin _Hmac {
+  final _rustHmac = lazyOf(() => nativeLib
+      .lookup<NativeFunction<RustThreeUtf8FuncNative>>("hmac")
+      .asFunction<RustThreeUtf8Func>());
 
-final RustHmacFunc rustHmac =
-    nativeLib.lookup<NativeFunction<RustHmacFuncNative>>("hmac").asFunction();
-
-typedef RustHmacFunc2 = Pointer<Utf8> Function(Pointer<Utf8>, Pointer<Utf8>);
-typedef RustHmacFuncNative2 = Pointer<Utf8> Function(
-    Pointer<Utf8>, Pointer<Utf8>);
-
-final RustHmacFunc2 rustHmac2 =
-    nativeLib.lookup<NativeFunction<RustHmacFuncNative2>>("hmac2").asFunction();
+  String hmac(Digest digest, String key, String input) =>
+      loader.executeBlock3(digest.name, key, input, _rustHmac());
+}
 
 class Digest {
   final String name;
@@ -38,4 +32,6 @@ class Digest {
   static const keccak256 = const Digest._('keccak256');
   static const keccak384 = const Digest._('keccak384');
   static const keccak512 = const Digest._('keccak512');
+  static const ripemd160 = const Digest._('ripemd160');
+  static const whirlpool = const Digest._('whirlpool');
 }
