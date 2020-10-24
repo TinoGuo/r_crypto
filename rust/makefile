@@ -28,6 +28,7 @@ help: makefile
 init:
 	rustup target add aarch64-apple-ios x86_64-apple-ios
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
+	rustup target add x86_64-apple-darwin
 	@if [ $$(uname) == "Darwin" ] ; then cargo install cargo-lipo ; fi
 	cargo install cbindgen
 
@@ -37,8 +38,8 @@ init:
 # # RECIPES
 # ##############################################################################
 
-## all: Compile iOS, Android and bindings targets
-all: ios android bindings
+## all: Compile iOS, Android, MacOS and bindings targets
+all: ios android macos bindings
 
 ## ios: Compile the iOS universal library
 ios: target/universal/release/librcrypto.a
@@ -66,6 +67,13 @@ target/i686-linux-android/release/librcrypto.so: $(SOURCES) ndk-home
 	CC_i686_linux_android=$(ANDROID_I686_LINKER) \
 	CARGO_TARGET_I686_LINUX_ANDROID_LINKER=$(ANDROID_I686_LINKER) \
 		cargo  build --target i686-linux-android --release
+
+## macos: Compile the macos targets
+
+macos: target/x86_64-apple-darwin/release/librcrypto.dylib
+
+target/x86_64-apple-darwin/release/librcrypto.dylib: $(SOURCES) ndk-home
+	cargo build --target x86_64-apple-darwin --release
 
 .PHONY: ndk-home
 ndk-home:

@@ -3,9 +3,17 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
-final DynamicLibrary nativeLib = Platform.isAndroid
-    ? DynamicLibrary.open("librcrypto.so")
-    : DynamicLibrary.process();
+final DynamicLibrary nativeLib = _open();
+
+DynamicLibrary _open() {
+  if (Platform.environment.containsKey('FLUTTER_TEST')) {
+    return DynamicLibrary.open(
+        'rust/target/x86_64-apple-darwin/release/librcrypto.dylib');
+  }
+  return Platform.isAndroid
+      ? DynamicLibrary.open("librcrypto.so")
+      : DynamicLibrary.process();
+}
 
 typedef RustSingleUtf8Func = Pointer<Utf8> Function(Pointer<Utf8>);
 typedef RustSingleUtf8FuncNative = Pointer<Utf8> Function(Pointer<Utf8>);

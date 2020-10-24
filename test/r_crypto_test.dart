@@ -1,23 +1,11 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:r_crypto/r_crypto.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('r_crypto');
-
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
-  });
-
-  tearDown(() {
-    channel.setMockMethodCallHandler(null);
-  });
-
-  test('getPlatformVersion', () async {
-    expect(await RCrypto.platformVersion, '42');
+  test('verify digest', () async {
+    expect(rCrypto.md5("hello"), "5d41402abc4b2a76b9719d911017c592");
+    expect(rCrypto.sha1("hello"), "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d");
   });
 }
