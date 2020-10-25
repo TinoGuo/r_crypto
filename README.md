@@ -1,15 +1,37 @@
+![](https://github.com/TinoGuo/r_crypto/workflows/CI%20check/badge.svg?branch=master)
+[![pub package](https://img.shields.io/pub/v/r_crypto.svg)](https://pub.dartlang.org/packages/r_crypto)
+![GitHub](https://img.shields.io/github/license/TinoGuo/r_crypto)
+![GitHub top language](https://img.shields.io/github/languages/top/TinoGuo/r_crypto)
+
 # r_crypto
 
-Rust backend support crypto library.
+Rust backend support crypto flutter library, faster than Dart-implementation library.
 
-## Getting Started
+## Support Algorithm
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+### Hashes
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- MD5
+- SHA1
+- SHA2
+    - SHA224
+    - SHA256
+    - SHA384
+    - SHA512-trunc224
+    - SHA512-trunc256
+- SHA3
+    - SHA3-224
+    - SHA3-256
+    - SHA3-384
+    - SHA3-512
+    - SHAKE-128
+    - SHAKE-256
+    - KECCAK224
+    - KECCAK256
+    - KECCAK384
+    - KECCAK512
+- HMAC
 
+### Encryption
+
+- Blowfish
