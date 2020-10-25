@@ -27,9 +27,9 @@ class _MyAppState extends State<MyApp> {
   List<int> decode(String input) => convert.hex.decode(input);
 
   initPlatformState() {
-    List<int> key = decode("feffe9928665731c6d6a8f9467308308");
-    List<int> iv = decode("cafebabefacedbaddecaf888");
-    List<int> add = decode("feedfacedeadbeeffeedfacedeadbeefabaddad2");
+    // List<int> key = decode("feffe9928665731c6d6a8f9467308308");
+    // List<int> iv = decode("cafebabefacedbaddecaf888");
+    // List<int> add = decode("feedfacedeadbeeffeedfacedeadbeefabaddad2");
     Blowfish blowfish = Blowfish.init("hello");
     String encrypted = blowfish.encrypt("world");
     print("encrypted: $encrypted");
