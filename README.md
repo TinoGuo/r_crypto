@@ -36,3 +36,13 @@ Rust backend support crypto flutter library, faster than Dart-implementation lib
 ### Encryption
 
 - Blowfish
+
+## Support Platform
+
+- Android
+    - arm64-v8a
+    - armeabi-v7a
+    - x86
+    - x86_64
+- iOS(All)
+- macOS(WIP)
