@@ -39,4 +39,4 @@ jobs:
       working-directory: ./example
       # No iOS now
       run: |
-        flutter build apk
+        flutter build aot
