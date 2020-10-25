@@ -20,7 +20,8 @@ jobs:
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
-      - run: |
+    - name: build and test rust
+      run: |
         cd rust
         make init
         make test
