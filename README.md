@@ -2,7 +2,7 @@
 [![pub package](https://img.shields.io/pub/v/r_crypto.svg)](https://pub.dartlang.org/packages/r_crypto)
 ![GitHub](https://img.shields.io/github/license/TinoGuo/r_crypto)
 ![GitHub top language](https://img.shields.io/github/languages/top/TinoGuo/r_crypto)
-![GitHub language count](https://img.shields.io/github/languages/count/commonality/getting-started-inner-source.svg)
+![GitHub language count](https://img.shields.io/github/languages/count/TinoGuo/r_crypto.svg)
 
 # r_crypto
 
