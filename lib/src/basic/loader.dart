@@ -3,12 +3,18 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
+const String _kTestDylib =
+    'rust/target/x86_64-apple-darwin/release/librcrypto.dylib';
 final DynamicLibrary nativeLib = _open();
 
 DynamicLibrary _open() {
   if (Platform.environment.containsKey('FLUTTER_TEST')) {
-    return DynamicLibrary.open(
-        'rust/target/x86_64-apple-darwin/release/librcrypto.dylib');
+    final path = Directory.current;
+    if (path.path.endsWith('test')) {
+      return DynamicLibrary.open('../$_kTestDylib');
+    } else {
+      return DynamicLibrary.open(_kTestDylib);
+    }
   }
   return Platform.isAndroid
       ? DynamicLibrary.open("librcrypto.so")
