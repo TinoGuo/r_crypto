@@ -4,14 +4,14 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'r_crypto'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'Rust backend support crypto library.'
   s.description      = <<-DESC
 Rust backend support crypto library.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/TinoGuo/r_crypto'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Your Company' => 'Tino' }
   s.source           = { :path => '.' }
   s.public_header_files = 'Classes**/*.h'
   s.source_files = 'Classes/**/*'
