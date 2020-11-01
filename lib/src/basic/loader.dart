@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+import 'package:r_crypto/src/basic/lazy.dart';
 
 const String _kTestDylib =
     'rust/target/x86_64-apple-darwin/release/librcrypto.dylib';
@@ -46,9 +47,10 @@ final loader = Loader._();
 class Loader {
   Loader._();
 
-  final FreeStringFunc freeCString = nativeLib
-      .lookup<NativeFunction<FreeStringFuncNative>>("rust_cstr_free")
-      .asFunction();
+  final freeCString = lazyOf(() =>
+      nativeLib
+          .lookup<NativeFunction<FreeStringFuncNative>>("rust_cstr_free")
+          .asFunction<FreeStringFunc>());
 
   String executeBlock(String input, RustSingleUtf8Func function) {
     final argName = Utf8.toUtf8(input);
@@ -67,8 +69,8 @@ class Loader {
     return resultStr;
   }
 
-  String executeBlock3(
-      String arg1, String arg2, String arg3, RustThreeUtf8Func function) {
+  String executeBlock3(String arg1, String arg2, String arg3,
+      RustThreeUtf8Func function) {
     final arg1Name = Utf8.toUtf8(arg1);
     final arg2Name = Utf8.toUtf8(arg2);
     final arg3Name = Utf8.toUtf8(arg3);
@@ -81,14 +83,16 @@ class Loader {
   Pointer<Uint8> executeUint8Block(String input, RustSingleUint8Func function) {
     final argName = Utf8.toUtf8(input);
     final resPointer = function(argName);
-    freeCString(argName);
+    freeCStrings([argName]);
     return resPointer;
   }
 
   Pointer<Uint8> uint8ListToArray(List<int> list) {
     final ptr = allocate<Uint8>(count: list.length);
     for (var i = 0; i < list.length; i++) {
-      ptr.elementAt(i).value = list[i];
+      ptr
+          .elementAt(i)
+          .value = list[i];
     }
     return ptr;
   }
@@ -96,7 +100,9 @@ class Loader {
   List<int> uint8ArrayToList(Pointer<Uint8> pointer, int length) {
     List<int> result = List(length);
     for (var i = 0; i < length; i++) {
-      result[i] = pointer.elementAt(i).value;
+      result[i] = pointer
+          .elementAt(i)
+          .value;
     }
     return result;
   }
@@ -104,7 +110,9 @@ class Loader {
   Pointer<Uint16> uint16ListToArray(List<int> list) {
     final ptr = allocate<Uint16>(count: list.length);
     for (var i = 0; i < list.length; i++) {
-      ptr.elementAt(i).value = list[i];
+      ptr
+          .elementAt(i)
+          .value = list[i];
     }
     return ptr;
   }
@@ -112,13 +120,15 @@ class Loader {
   Pointer<Uint32> uint32ListToArray(List<int> list) {
     final ptr = allocate<Uint32>(count: list.length);
     for (var i = 0; i < list.length; i++) {
-      ptr.elementAt(i).value = list[i];
+      ptr
+          .elementAt(i)
+          .value = list[i];
     }
     return ptr;
   }
 
   void freeCStrings(List<Pointer<Utf8>> pointerList) {
-    pointerList.forEach((element) => freeCString(element));
+    pointerList.forEach((element) => freeCString()(element));
   }
 
   void freePointer<T extends NativeType>(Pointer<T> pointer) {

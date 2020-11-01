@@ -4,16 +4,18 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'r_crypto'
-  s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
+  s.version          = '0.0.2'
+  s.summary          = 'Rust backend support crypto library.'
   s.description      = <<-DESC
 A new flutter plugin project.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/TinoGuo/r_crypto'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Your Company' => 'Tino' }
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
+  s.static_framework = true
+  s.vendored_libraries = "**/*.a"
   s.dependency 'FlutterMacOS'
 
   s.platform = :osx, '10.11'

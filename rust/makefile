@@ -30,6 +30,7 @@ init:
 	rustup target add aarch64-apple-ios x86_64-apple-ios
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 	rustup target add x86_64-apple-darwin
+## add support later	rustup target add aarch64-apple-darwin
 	@if [ $$(uname) == "Darwin" ] ; then cargo install cargo-lipo ; fi
 	cargo install cbindgen
 
@@ -76,10 +77,13 @@ target/x86_64-linux-android/release/libcrypto.so: $(SOURCES) ndk-home
 
 ## macos: Compile the macos targets
 
-macos: target/x86_64-apple-darwin/release/librcrypto.dylib
+macos: target/x86_64-apple-darwin/release/librcrypto.a
 
-target/x86_64-apple-darwin/release/librcrypto.dylib: $(SOURCES) ndk-home
+target/x86_64-apple-darwin/release/librcrypto.a: $(SOURCES) ndk-home
 	cargo build --target x86_64-apple-darwin --release
+
+## target/aarch64-apple-darwin/release/librcrypto.a: $(SOURCES) ndk-home
+##	cargo build --target aarch64-apple-darwin --release
 
 .PHONY: ndk-home
 ndk-home:
