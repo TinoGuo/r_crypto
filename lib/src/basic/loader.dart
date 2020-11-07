@@ -47,10 +47,9 @@ final loader = Loader._();
 class Loader {
   Loader._();
 
-  final freeCString = lazyOf(() =>
-      nativeLib
-          .lookup<NativeFunction<FreeStringFuncNative>>("rust_cstr_free")
-          .asFunction<FreeStringFunc>());
+  final freeCString = lazyOf(() => nativeLib
+      .lookup<NativeFunction<FreeStringFuncNative>>("rust_cstr_free")
+      .asFunction<FreeStringFunc>());
 
   String executeBlock(String input, RustSingleUtf8Func function) {
     final argName = Utf8.toUtf8(input);
@@ -69,8 +68,12 @@ class Loader {
     return resultStr;
   }
 
-  String executeBlock3(String arg1, String arg2, String arg3,
-      RustThreeUtf8Func function) {
+  String executeBlock3(
+    String arg1,
+    String arg2,
+    String arg3,
+    RustThreeUtf8Func function,
+  ) {
     final arg1Name = Utf8.toUtf8(arg1);
     final arg2Name = Utf8.toUtf8(arg2);
     final arg3Name = Utf8.toUtf8(arg3);
