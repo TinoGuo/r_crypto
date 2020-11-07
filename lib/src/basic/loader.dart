@@ -93,9 +93,7 @@ class Loader {
   Pointer<Uint8> uint8ListToArray(List<int> list) {
     final ptr = allocate<Uint8>(count: list.length);
     for (var i = 0; i < list.length; i++) {
-      ptr
-          .elementAt(i)
-          .value = list[i];
+      ptr.elementAt(i).value = list[i];
     }
     return ptr;
   }
