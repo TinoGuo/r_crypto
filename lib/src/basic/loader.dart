@@ -109,9 +109,7 @@ class Loader {
   Pointer<Uint16> uint16ListToArray(List<int> list) {
     final ptr = allocate<Uint16>(count: list.length);
     for (var i = 0; i < list.length; i++) {
-      ptr
-          .elementAt(i)
-          .value = list[i];
+      ptr.elementAt(i).value = list[i];
     }
     return ptr;
   }
@@ -119,9 +117,7 @@ class Loader {
   Pointer<Uint32> uint32ListToArray(List<int> list) {
     final ptr = allocate<Uint32>(count: list.length);
     for (var i = 0; i < list.length; i++) {
-      ptr
-          .elementAt(i)
-          .value = list[i];
+      ptr.elementAt(i).value = list[i];
     }
     return ptr;
   }
