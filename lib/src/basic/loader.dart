@@ -101,9 +101,7 @@ class Loader {
   List<int> uint8ArrayToList(Pointer<Uint8> pointer, int length) {
     List<int> result = List(length);
     for (var i = 0; i < length; i++) {
-      result[i] = pointer
-          .elementAt(i)
-          .value;
+      result[i] = pointer.elementAt(i).value;
     }
     return result;
   }
