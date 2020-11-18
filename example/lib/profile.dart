@@ -2,8 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-typedef RustFunc = void Function();
-typedef DartFunc = void Function();
+typedef RustFunc = List<int> Function(String);
+typedef DartFunc = List<int> Function(String);
+
+const String input = '1234567890zxcvbnmasdfghjklqwertyuiop';
 
 class ProfileData {
   final String name;
@@ -71,21 +73,24 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
               child: Text('Loop time'),
             ),
             Slider.adaptive(
-              min: _loading == LoadState.LOADING ? 100000 : 10000,
+              min: 10000,
               max: 100000,
               label: _sliderValue.round().toString(),
               divisions: 9,
               onChanged: (double value) {
-                setState(() {
-                  _sliderValue = value;
-                });
+                if (_loading != LoadState.LOADING) {
+                  setState(() {
+                    _sliderValue = value;
+                  });
+                }
               },
-              value: _loading == LoadState.LOADING ? 100000 : _sliderValue,
+              value: _sliderValue,
             ),
             Align(
               alignment: Alignment.center,
               child: Text(
                 _text(_loading),
+                textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 28),
               ),
             ),
@@ -102,7 +107,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
   String _text(LoadState state) {
     switch (state) {
       case LoadState.NOT_STARTED:
-        return 'Ready';
+        return 'Make sure you run it in profile mode';
       case LoadState.LOADING:
         return "Loading";
       case LoadState.DONE:
@@ -130,16 +135,15 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     } else {
       _dartTime = "Dart:None";
     }
-    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       _loading = LoadState.DONE;
     });
   }
 
-  Future<int> _watchTime(Function() function) async {
+  Future<int> _watchTime(Function(String) function) async {
     final stopwatch = Stopwatch()..start();
     for (int i = 0; i < _sliderValue; i++) {
-      function();
+      function("$input$i");
     }
     return stopwatch.elapsed.inMilliseconds;
   }
