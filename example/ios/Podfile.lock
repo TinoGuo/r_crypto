@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - r_crypto (0.0.1):
+  - r_crypto (0.0.2):
     - Flutter
 
 DEPENDENCIES:
@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  r_crypto: b2183f419d84c15727857f26616709ede0610b09
+  r_crypto: bc79546d84d69bf33285e44e9178c11360d49d3a
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

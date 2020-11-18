@@ -6,7 +6,8 @@
 
 # r_crypto
 
-Rust backend support crypto flutter library, faster than Dart-implementation library.
+Rust backend support crypto flutter library, much faster than Dart-implementation library, light-weight library.
+Some crypto support hardware accelerate.
 
 ## Support Algorithm
 
@@ -31,11 +32,13 @@ Rust backend support crypto flutter library, faster than Dart-implementation lib
     - KECCAK256
     - KECCAK384
     - KECCAK512
-- HMAC
+- Whirlpool
+- Blake2
+    - Blake2b
+    - Blake2s
+- Blake3
 
-### Encryption
-
-- Blowfish
+More digest will support soon.
 
 ## Support Platform
 

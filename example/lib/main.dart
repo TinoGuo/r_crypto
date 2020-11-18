@@ -5,63 +5,134 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:r_crypto/r_crypto.dart';
+import 'package:r_crypto_example/hash.dart';
 import 'package:r_crypto_example/profile.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(DemoApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
+class DemoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var list = [
-      ProfileData(
-        'MD5',
-        rustFunc: () => rCrypto.md5(input),
-        dartFunc: () => crypto.md5.executeDart(),
-      ),
-      ProfileData(
-        'SHA1',
-        rustFunc: () => rCrypto.sha1(input),
-        dartFunc: () => crypto.sha1.executeDart(),
-      ),
-      ProfileData(
-        'SHA224',
-        rustFunc: () => rCrypto.sha224(input),
-        dartFunc: () => crypto.sha224.executeDart(),
-      ),
-      ProfileData(
-        'SHA256',
-        rustFunc: () => rCrypto.sha256(input),
-        dartFunc: () => crypto.sha256.executeDart(),
-      ),
-      ProfileData(
-        'SHA384',
-        rustFunc: () => rCrypto.sha384(input),
-        dartFunc: () => crypto.sha384.executeDart(),
-      ),
-    ];
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: ListView.builder(
-          itemBuilder: (context, index) => ProfileItemWidget(list[index]),
-          itemCount: list.length,
+      home: DemoScreen(),
+    );
+  }
+}
+
+class DemoScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('rCrypto Demo'),
+      ),
+      body: Center(
+        child: ListView(
+          children: [
+            ListTile(
+              title: Text('Hash'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => HashListScreen()));
+              },
+            ),
+            ListTile(
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => ProfileListScreen()));
+              },
+            )
+          ],
         ),
       ),
     );
   }
 }
 
-const String input = '1234567890zxcvbnmasdfghjklqwertyuiop';
+var list = [
+  ProfileData(
+    'MD5',
+    rustFunc: (input) => rCrypto.hashString(HashType.MD5, input),
+    dartFunc: (input) => crypto.md5.executeDart(input),
+  ),
+  ProfileData(
+    'SHA1',
+    rustFunc: (input) => rCrypto.hashString(HashType.SHA1, input),
+    dartFunc: (input) => crypto.sha1.executeDart(input),
+  ),
+  ProfileData(
+    'SHA256',
+    rustFunc: (input) => rCrypto.hashString(HashType.SHA256, input),
+    dartFunc: (input) => crypto.sha256.executeDart(input),
+  ),
+  ProfileData(
+    'SHA384',
+    rustFunc: (input) => rCrypto.hashString(HashType.SHA384, input),
+    dartFunc: (input) => crypto.sha384.executeDart(input),
+  ),
+  ProfileData(
+    'SHA512',
+    rustFunc: (input) => rCrypto.hashString(HashType.SHA512, input),
+    dartFunc: (input) => crypto.sha512.executeDart(input),
+  ),
+  ProfileData(
+    'SHA512_TRUNC224',
+    rustFunc: (input) => rCrypto.hashString(HashType.SHA512_TRUNC224, input),
+  ),
+  ProfileData(
+    'SHA512_TRUNC256',
+    rustFunc: (input) => rCrypto.hashString(HashType.SHA512_TRUNC256, input),
+  ),
+];
+
+class HashListScreen extends StatefulWidget {
+  @override
+  _HashListScreenState createState() => _HashListScreenState();
+}
+
+class _HashListScreenState extends State<HashListScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('rCrypto hash'),
+      ),
+      body: ListView.builder(
+        itemBuilder: (context, index) =>
+            HashItemWidget(profileData: list[index]),
+        itemCount: list.length,
+      ),
+    );
+  }
+}
+
+class ProfileListScreen extends StatefulWidget {
+  @override
+  _ProfileListScreenState createState() => _ProfileListScreenState();
+}
+
+class _ProfileListScreenState extends State<ProfileListScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('RCrypto profile'),
+      ),
+      body: ListView.builder(
+        itemBuilder: (context, index) => ProfileItemWidget(list[index]),
+        itemCount: list.length,
+      ),
+    );
+  }
+}
 
 extension HashExt on crypto.Hash {
-  String executeDart() => hex.encode(this.convert(utf8.encode(input)).bytes);
+  List<int> executeDart(String input) => this.convert(utf8.encode(input)).bytes;
+}
+
+extension ListExt on List<int> {
+  String toHex() => hex.encode(this);
 }

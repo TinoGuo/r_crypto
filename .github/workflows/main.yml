@@ -25,6 +25,7 @@ jobs:
         cd rust
         make init
         make test
+        cargo bench --verbose
         make all
     - run: flutter pub get
     # Analyze our Dart code

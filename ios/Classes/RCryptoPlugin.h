@@ -3,50 +3,75 @@
 @interface RCryptoPlugin : NSObject<FlutterPlugin>
 @end
 
-char *blowfish_decrypt(unsigned char *ptr, const char *input_p);
+static const uint32_t TYPE_MD5 = 0;
 
-void blowfish_destroy(unsigned char *ptr);
+static const uint32_t TYPE_SHA1 = 10;
 
-char *blowfish_encrypt(unsigned char *ptr, const char *input_p);
+static const uint32_t TYPE_SHA224 = 20;
 
-unsigned char *blowfish_new(const char *key_p);
+static const uint32_t TYPE_SHA256 = 21;
 
-char *hmac(const char *name, const char *key, const char *input);
+static const uint32_t TYPE_SHA384 = 22;
 
-char *keccak224(const char *input);
+static const uint32_t TYPE_SHA512 = 23;
 
-char *keccak256(const char *input);
+static const uint32_t TYPE_SHA512_TRUNC224 = 24;
 
-char *keccak384(const char *input);
+static const uint32_t TYPE_SHA512_TRUNC256 = 25;
 
-char *keccak512(const char *input);
+static const uint32_t TYPE_SHA3_224 = 30;
 
-char *md5(const char *input);
+static const uint32_t TYPE_SHA3_256 = 31;
+
+static const uint32_t TYPE_SHA3_384 = 32;
+
+static const uint32_t TYPE_SHA3_512 = 33;
+
+static const uint32_t TYPE_KECCAK_224 = 34;
+
+static const uint32_t TYPE_KECCAK_256 = 35;
+
+static const uint32_t TYPE_KECCAK_384 = 36;
+
+static const uint32_t TYPE_KECCAK_512 = 37;
+
+static const uint32_t TYPE_SHAKE_128 = 38;
+
+static const uint32_t TYPE_SHAKE_256 = 39;
+
+static const uint32_t TYPE_WHIRLPOOL = 50;
+
+static const uint32_t TYPE_BLAKE3 = 60;
 
 void rust_cstr_free(char *s);
 
-char *sha1(const char *input);
+void hash_data(uint32_t hash_type,
+               const uint8_t *key,
+               uint32_t key_len,
+               const uint8_t *input,
+               uint32_t input_len,
+               uint8_t *output,
+               uint32_t output_len);
 
-char *sha224(const char *input);
+void blake2b(const uint8_t *persona,
+             uint32_t persona_len,
+             const uint8_t *salt,
+             uint32_t salt_len,
+             const uint8_t *key,
+             uint32_t key_len,
+             const uint8_t *input,
+             uint32_t input_len,
+             uint8_t *output,
+             uint32_t output_len);
 
-char *sha256(const char *input);
+void blake2s(const uint8_t *persona,
+             uint32_t persona_len,
+             const uint8_t *salt,
+             uint32_t salt_len,
+             const uint8_t *key,
+             uint32_t key_len,
+             const uint8_t *input,
+             uint32_t input_len,
+             uint8_t *output,
+             uint32_t output_len);
 
-char *sha384(const char *input);
-
-char *sha3_224(const char *input);
-
-char *sha3_256(const char *input);
-
-char *sha3_384(const char *input);
-
-char *sha3_512(const char *input);
-
-char *sha512(const char *input);
-
-char *sha512_trunc224(const char *input);
-
-char *sha512_trunc256(const char *input);
-
-char *shake_128(const char *input);
-
-char *shake_256(const char *input);

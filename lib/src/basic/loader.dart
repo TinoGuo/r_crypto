@@ -22,11 +22,11 @@ DynamicLibrary _open() {
       : DynamicLibrary.process();
 }
 
-typedef RustSingleUtf8Func = Pointer<Utf8> Function(Pointer<Utf8>);
-typedef RustSingleUtf8FuncNative = Pointer<Utf8> Function(Pointer<Utf8>);
-typedef RustTwoUtf8Func = Pointer<Utf8> Function(Pointer<Utf8>, Pointer<Utf8>);
-typedef RustTwoUtf8FuncNative = Pointer<Utf8> Function(
-    Pointer<Utf8>, Pointer<Utf8>);
+typedef GenericVecFuncNative = Void Function(Uint32, Pointer<Uint8>, Uint32,
+    Pointer<Uint8>, Uint32, Pointer<Uint8>, Uint32);
+typedef GenericVecFunc = void Function(
+    int, Pointer<Uint8>, int, Pointer<Uint8>, int, Pointer<Uint8>, int);
+
 typedef RustThreeUtf8Func = Pointer<Utf8> Function(
     Pointer<Utf8>, Pointer<Utf8>, Pointer<Utf8>);
 typedef RustThreeUtf8FuncNative = Pointer<Utf8> Function(
@@ -50,23 +50,6 @@ class Loader {
   final freeCString = lazyOf(() => nativeLib
       .lookup<NativeFunction<FreeStringFuncNative>>("rust_cstr_free")
       .asFunction<FreeStringFunc>());
-
-  String executeBlock(String input, RustSingleUtf8Func function) {
-    final argName = Utf8.toUtf8(input);
-    final resPointer = function(argName);
-    final resultStr = Utf8.fromUtf8(resPointer);
-    freeCStrings([argName, resPointer]);
-    return resultStr;
-  }
-
-  String executeBlock2(String arg1, String arg2, RustTwoUtf8Func function) {
-    final arg1Name = Utf8.toUtf8(arg1);
-    final arg2Name = Utf8.toUtf8(arg2);
-    final resPointer = function(arg1Name, arg2Name);
-    final resultStr = Utf8.fromUtf8(resPointer);
-    freeCStrings([arg1Name, arg2Name, resPointer]);
-    return resultStr;
-  }
 
   String executeBlock3(
     String arg1,
