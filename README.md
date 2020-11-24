@@ -47,5 +47,24 @@ More digest will support soon.
     - armeabi-v7a
     - x86
     - x86_64
-- iOS(All)
+- iOS
+    - arm64
+    - x86_64
 - macOS(WIP)
+
+## Example Usage
+
+### Hash
+
+```dart
+import 'package:r_crypto/r_crypto.dart';
+
+//For fixed output length digest
+rCrypto.hashString(HashType.MD5, input);
+//For dynamic output length digest
+rCrypto.hashString(HashType.blake3(length: 64), input);
+//For Blake2 only
+rCrypto.blake2String(Blake2Type.blake2b(32), input);
+//Also accept List<int> as parameter
+rCrypto.hashList(HashType.KECCAK_224, [0,1,2]);
+```
