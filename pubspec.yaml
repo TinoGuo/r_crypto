@@ -1,6 +1,6 @@
 name: r_crypto
 description: Rust backend support crypto library.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/TinoGuo/r_crypto
 repository: https://github.com/TinoGuo/r_crypto
 

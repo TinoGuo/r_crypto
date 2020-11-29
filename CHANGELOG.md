@@ -1,3 +1,11 @@
+## 0.0.3
+
+* Refactor new native library.
+* Add support Blake2, Blake3, Whirlpool.
+* Support non-fixed output.
+* Fully test coverage in both Rust and Dart side.
+* Benchmark in every digest.
+
 ## 0.0.2
 
 * Support Android x86_64 abi.
