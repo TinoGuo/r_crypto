@@ -22,3 +22,10 @@ pub const TYPE_SHAKE_256: u32 = 39;
 pub const TYPE_WHIRLPOOL: u32 = 50;
 //Blake3
 pub const TYPE_BLAKE3: u32 = 60;
+//Groestl
+pub const TYPE_GROESTL_224: u32 = 70;
+pub const TYPE_GROESTL_256: u32 = 71;
+pub const TYPE_GROESTL_384: u32 = 72;
+pub const TYPE_GROESTL_512: u32 = 73;
+pub const TYPE_GROESTL_BIG: u32 = 74;
+pub const TYPE_GROESTL_SMALL: u32 = 75;

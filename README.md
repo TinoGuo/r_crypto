@@ -37,6 +37,13 @@ Some crypto support hardware accelerate.
     - Blake2b
     - Blake2s
 - Blake3
+- Groestl
+    - Groestl224
+    - Groestl256
+    - Groestl384
+    - Groestl512
+    - GroestlBig
+    - GroestlSmall
 
 More digest will support soon.
 

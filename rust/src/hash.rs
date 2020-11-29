@@ -31,6 +31,7 @@ pub extern fn hash_data(hash_type: u32,
     use sha2::{Digest, Sha224, Sha256, Sha384, Sha512, Sha512Trunc224, Sha512Trunc256};
     use sha3::{Keccak224, Keccak256, Keccak384, Keccak512, Sha3_224, Sha3_256, Sha3_384, Sha3_512};
     use whirlpool::Whirlpool;
+    use groestl::{Groestl224, Groestl256, Groestl384, Groestl512};
     use crate::constants::*;
 
     match hash_type {
@@ -122,6 +123,38 @@ pub extern fn hash_data(hash_type: u32,
             hasher.update(src);
             let mut output = hasher.finalize_xof();
             output.fill(res);
+        }
+        TYPE_GROESTL_224 => {
+            hash_fixed!(Groestl224, input, input_len, output, output_len, 28);
+        }
+        TYPE_GROESTL_256 => {
+            hash_fixed!(Groestl256, input, input_len, output, output_len, 32);
+        }
+        TYPE_GROESTL_384 => {
+            hash_fixed!(Groestl384, input, input_len, output, output_len, 48);
+        }
+        TYPE_GROESTL_512 => {
+            hash_fixed!(Groestl512, input, input_len, output, output_len, 64);
+        }
+        TYPE_GROESTL_BIG => {
+            use groestl::digest::VariableOutput;
+            use groestl::digest::Update;
+            assert!(output_len > 32 && output_len <= 64);
+            let src = unsafe { std::slice::from_raw_parts(input, input_len as usize) };
+            let res = unsafe { std::slice::from_raw_parts_mut(output, output_len as usize) };
+            let mut hasher = groestl::GroestlBig::new(output_len as usize).unwrap();
+            hasher.update(src);
+            hasher.finalize_variable(|s| res.copy_from_slice(s));
+        }
+        TYPE_GROESTL_SMALL => {
+            use groestl::digest::VariableOutput;
+            use groestl::digest::Update;
+            assert!(output_len > 0 && output_len <= 32);
+            let src = unsafe { std::slice::from_raw_parts(input, input_len as usize) };
+            let res = unsafe { std::slice::from_raw_parts_mut(output, output_len as usize) };
+            let mut hasher = groestl::GroestlSmall::new(output_len as usize).unwrap();
+            hasher.update(src);
+            hasher.finalize_variable(|s| res.copy_from_slice(s));
         }
         _ => panic!("No matched type!"),
     };
@@ -310,5 +343,89 @@ mod test_hash {
         let key = b"01234567890123456789012345678901";
         hash_data(TYPE_BLAKE3, key.as_ptr(), key.len() as u32, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
         assert_eq!("a90d00da3185ee3b0212f04238f9fad58199dc63ab71c5f1968d9b03d681919b", output.to_hex());
+    }
+
+    #[test]
+    fn groestl_224_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 28];
+        hash_data(TYPE_GROESTL_224, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("f2e180fb5947be964cd584e22e496242c6a329c577fc4ce8c36d34c3", output.to_hex());
+    }
+
+    #[test]
+    fn groestl_256_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 32];
+        hash_data(TYPE_GROESTL_256, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("1a52d11d550039be16107f9c58db9ebcc417f16f736adb2502567119f0083467", output.to_hex());
+    }
+
+    #[test]
+    fn groestl_384_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 48];
+        hash_data(TYPE_GROESTL_384, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("ac353c1095ace21439251007862d6c62f829ddbe6de4f78e68d310a9205a736d8b11d99bffe448f57a1cfa2934f044a5", output.to_hex());
+    }
+
+    #[test]
+    fn groestl_512_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 64];
+        hash_data(TYPE_GROESTL_512, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8", output.to_hex());
+    }
+
+    #[test]
+    #[should_panic]
+    fn groestl_big_size_equal_min_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 32];
+        hash_data(TYPE_GROESTL_BIG, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8", output.to_hex());
+    }
+
+    #[test]
+    #[should_panic]
+    fn groestl_big_size_larger_max_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 65];
+        hash_data(TYPE_GROESTL_BIG, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8", output.to_hex());
+    }
+
+    #[test]
+    fn groestl_big_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 64];
+        hash_data(TYPE_GROESTL_BIG, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8", output.to_hex());
+    }
+
+    #[test]
+    #[should_panic]
+    fn groestl_small_size_equal_min_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 0];
+        hash_data(TYPE_GROESTL_SMALL, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8", output.to_hex());
+    }
+
+    #[test]
+    #[should_panic]
+    fn groestl_small_size_larger_max_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 33];
+        hash_data(TYPE_GROESTL_SMALL, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8", output.to_hex());
+    }
+
+    #[test]
+    fn groestl_small_test() {
+        let input = "".as_bytes();
+        let mut output = [0u8; 32];
+        hash_data(TYPE_GROESTL_SMALL, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("1a52d11d550039be16107f9c58db9ebcc417f16f736adb2502567119f0083467", output.to_hex());
     }
 }
