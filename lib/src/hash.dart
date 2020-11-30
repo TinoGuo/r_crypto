@@ -24,6 +24,16 @@ class HashType {
         type = 60,
         length = length;
 
+  const HashType.groestlBig(int length)
+      : assert(length > 32 && length <= 64),
+        type = 74,
+        length = length;
+
+  const HashType.groestlSmall(int length)
+      : assert(length > 0 && length <= 32),
+        type = 75,
+        length = length;
+
   static const MD5 = HashType._(0, 16);
   static const SHA1 = HashType._(10, 20);
   static const SHA224 = HashType._(20, 28);
@@ -41,6 +51,10 @@ class HashType {
   static const KECCAK_384 = HashType._(36, 48);
   static const KECCAK_512 = HashType._(37, 64);
   static const WHIRLPOOL = HashType._(50, 64);
+  static const GROESTL_224 = HashType._(70, 28);
+  static const GROESTL_256 = HashType._(70, 32);
+  static const GROESTL_384 = HashType._(70, 48);
+  static const GROESTL_512 = HashType._(70, 64);
 }
 
 mixin _Hash {

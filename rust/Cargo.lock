@@ -351,6 +351,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "groestl"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2432787a9b8f0d58dca43fe2240399479b7582dc8afa2126dc7652b864029e47"
+dependencies = [
+ "block-buffer",
+ "digest",
+ "opaque-debug",
+]
+
+[[package]]
 name = "half"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -618,6 +629,7 @@ dependencies = [
  "blake3",
  "cbindgen",
  "criterion",
+ "groestl",
  "hmac",
  "md-5",
  "rustc-serialize",

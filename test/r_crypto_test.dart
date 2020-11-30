@@ -107,6 +107,16 @@ void main() {
         hex.decode(
             "a90d00da3185ee3b0212f04238f9fad58199dc63ab71c5f1968d9b03d681919b"),
       );
+      expect(
+        rCrypto.hashString(HashType.groestlBig(64), ""),
+        hex.decode(
+            "6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8"),
+      );
+      expect(
+        rCrypto.hashString(HashType.groestlSmall(32), ""),
+        hex.decode(
+            "1a52d11d550039be16107f9c58db9ebcc417f16f736adb2502567119f0083467"),
+      );
     });
 
     test('verify blake2', () {

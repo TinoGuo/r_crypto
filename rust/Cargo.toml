@@ -31,3 +31,4 @@ blake2 = { version = "0.9.1", default-features = false }
 blake3 = { version = "0.3.7", default-features = false }
 whirlpool = { version = "0.9.0", default-features = false }
 hmac = { version = "0.10.1", default-features = false }
+groestl = { version = "0.9.0", default-features = false }
