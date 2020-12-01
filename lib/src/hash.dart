@@ -52,9 +52,15 @@ class HashType {
   static const KECCAK_512 = HashType._(37, 64);
   static const WHIRLPOOL = HashType._(50, 64);
   static const GROESTL_224 = HashType._(70, 28);
-  static const GROESTL_256 = HashType._(70, 32);
-  static const GROESTL_384 = HashType._(70, 48);
-  static const GROESTL_512 = HashType._(70, 64);
+  static const GROESTL_256 = HashType._(71, 32);
+  static const GROESTL_384 = HashType._(72, 48);
+  static const GROESTL_512 = HashType._(73, 64);
+  static const RIPEMD160 = HashType._(80, 20);
+  static const SHABAL192 = HashType._(90, 24);
+  static const SHABAL224 = HashType._(91, 28);
+  static const SHABAL256 = HashType._(92, 32);
+  static const SHABAL384 = HashType._(93, 48);
+  static const SHABAL512 = HashType._(94, 64);
 }
 
 mixin _Hash {
