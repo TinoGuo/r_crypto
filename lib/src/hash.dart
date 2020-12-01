@@ -1,37 +1,49 @@
 part of 'r_crypto_impl.dart';
 
+/// Extension Hash type, which is not fixed output.
 enum ExtensionHash {
   Shake128,
   Shake256,
+  GroestlBig,
+  GroestlSmall,
 }
 
 class HashType {
-  // the Hash type.
+  /// The Hash type, see const list and [ExtensionHash].
   final int type;
 
-  // the expected length, if the length is 0 means not fixed.
+  /// The expected length.
   final int length;
 
+  /// Not public, only allow internal type.
   const HashType._(this.type, this.length) : assert(length > 0);
 
+  /// For [ExtensionHash.Shake128] and [ExtensionHash.Shake256]
   const HashType.shake(ExtensionHash shake, int length)
       : assert(length > 0),
+        assert(
+            shake == ExtensionHash.Shake128 || shake == ExtensionHash.Shake256),
         type = shake == ExtensionHash.Shake128 ? 38 : 39,
         length = length;
 
+  /// For Blake3.
   const HashType.blake3({int length = 32})
       : assert(length > 0),
         type = 60,
         length = length;
 
-  const HashType.groestlBig(int length)
-      : assert(length > 32 && length <= 64),
-        type = 74,
-        length = length;
-
-  const HashType.groestlSmall(int length)
-      : assert(length > 0 && length <= 32),
-        type = 75,
+  /// For [ExtensionHash.GroestlBig] and [ExtensionHash.GroestlSmall].
+  ///
+  /// Length range of [ExtensionHash.GroestlBig] from 32(exclusive) to 64(inclusive).
+  /// Length range of [ExtensionHash.GroestlSmall] from 0(exclusive) to 32(inclusive).
+  const HashType.groestlDynamic(ExtensionHash extensionHash, int length)
+      : assert((extensionHash == ExtensionHash.GroestlBig &&
+                length > 32 &&
+                length <= 64) ||
+            (extensionHash == ExtensionHash.GroestlSmall &&
+                length > 0 &&
+                length <= 32)),
+        type = extensionHash == ExtensionHash.GroestlBig ? 74 : 75,
         length = length;
 
   static const MD5 = HashType._(0, 16);
@@ -68,14 +80,20 @@ mixin _Hash {
       .lookup<NativeFunction<GenericVecFuncNative>>("hash_data")
       .asFunction<GenericVecFunc>());
 
-  // key is only for blake3
+  /// [input] is the source string to hash.
+  /// [key] is optional, currently only for Blake3.
+  ///
+  /// Return the int of [List], which can be encode as hex string.
   List<int> hashString(HashType hashType, String input, {String key}) {
     List<int> list = utf8.encode(input);
     List<int> keyList = key == null ? null : utf8.encode(key);
     return hashList(hashType, list, key: keyList);
   }
 
-  // key is only for blake3
+  /// [input] is the source list to hash, which can be decode from hex string.
+  /// [key] is optional, currently only for Blake3.
+  ///
+  /// Return the int of [List], which can be encode as hex string.
   List<int> hashList(HashType hashType, List<int> list, {List<int> key}) {
     Pointer<Uint8> pointer = loader.uint8ListToArray(list);
     Pointer<Uint8> outputPointer = allocate(count: hashType.length);
@@ -121,15 +139,17 @@ typedef Blake2Func = void Function(
   int,
 );
 
+/// [Blake2](https://en.wikipedia.org/wiki/BLAKE_(hash_function))
 enum Blake2 {
   Blake2b,
   Blake2s,
 }
 
 class Blake2Type {
+  /// The Hash type, see [Blake2].
   final Blake2 type;
 
-  // the expected length, must larger than 0.
+  /// The expected length, must larger than 0.
   final int length;
 
   const Blake2Type.blake2b(this.length) : type = Blake2.Blake2b;
@@ -145,6 +165,10 @@ mixin _Blake2 {
       .lookup<NativeFunction<Blake2FuncNative>>("blake2s")
       .asFunction<Blake2Func>());
 
+  /// [input] is the source string to hash.
+  /// [persona], [salt], [key] is optional, which can be null.
+  ///
+  /// Return the int of [List], which can be encode as hex string.
   List<int> blake2String(
     Blake2Type hashType,
     String input, {
@@ -156,6 +180,10 @@ mixin _Blake2 {
     return blake2List(hashType, list, persona: persona, key: key, salt: salt);
   }
 
+  /// [input] is the source list to hash, which can be decode from hex string.
+  /// [persona], [salt], [key] is optional, which can be null.
+  ///
+  /// Return the int of [List], which can be encode as hex string.
   List<int> blake2List(
     Blake2Type hashType,
     List<int> list, {

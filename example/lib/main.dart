@@ -55,36 +55,36 @@ class DemoScreen extends StatelessWidget {
 var list = [
   ProfileData(
     'MD5',
-    rustFunc: (input) => rCrypto.hashString(HashType.MD5, input),
+    rustFunc: (input) => rHash.hashString(HashType.MD5, input),
     dartFunc: (input) => crypto.md5.executeDart(input),
   ),
   ProfileData(
     'SHA1',
-    rustFunc: (input) => rCrypto.hashString(HashType.SHA1, input),
+    rustFunc: (input) => rHash.hashString(HashType.SHA1, input),
     dartFunc: (input) => crypto.sha1.executeDart(input),
   ),
   ProfileData(
     'SHA256',
-    rustFunc: (input) => rCrypto.hashString(HashType.SHA256, input),
+    rustFunc: (input) => rHash.hashString(HashType.SHA256, input),
     dartFunc: (input) => crypto.sha256.executeDart(input),
   ),
   ProfileData(
     'SHA384',
-    rustFunc: (input) => rCrypto.hashString(HashType.SHA384, input),
+    rustFunc: (input) => rHash.hashString(HashType.SHA384, input),
     dartFunc: (input) => crypto.sha384.executeDart(input),
   ),
   ProfileData(
     'SHA512',
-    rustFunc: (input) => rCrypto.hashString(HashType.SHA512, input),
+    rustFunc: (input) => rHash.hashString(HashType.SHA512, input),
     dartFunc: (input) => crypto.sha512.executeDart(input),
   ),
   ProfileData(
     'SHA512_TRUNC224',
-    rustFunc: (input) => rCrypto.hashString(HashType.SHA512_TRUNC224, input),
+    rustFunc: (input) => rHash.hashString(HashType.SHA512_TRUNC224, input),
   ),
   ProfileData(
     'SHA512_TRUNC256',
-    rustFunc: (input) => rCrypto.hashString(HashType.SHA512_TRUNC256, input),
+    rustFunc: (input) => rHash.hashString(HashType.SHA512_TRUNC256, input),
   ),
 ];
 

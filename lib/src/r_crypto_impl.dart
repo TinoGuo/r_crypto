@@ -6,10 +6,10 @@ import 'package:r_crypto/src/basic/lazy.dart';
 import 'package:r_crypto/src/basic/loader.dart';
 
 part 'hash.dart';
-part 'hmac.dart';
 
-final rCrypto = _RCrypto._();
+/// Singleton instance of Hash util class.
+final rHash = _RHash._();
 
-class _RCrypto with _Hmac, _Hash, _Blake2 {
-  _RCrypto._();
+class _RHash with _Hash, _Blake2 {
+  _RHash._();
 }
