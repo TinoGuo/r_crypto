@@ -7,6 +7,7 @@
 # r_crypto
 
 Rust backend support crypto flutter library, much faster than Dart-implementation library, light-weight library.
+
 Some crypto support hardware accelerate.
 
 ## Support Algorithm
@@ -85,3 +86,7 @@ rCrypto.hashList(HashType.KECCAK_224, [0,1,2]);
 //Encode the list
 hex.encode(list);
 ```
+
+## TODO
+- [] Support file input
+- [] Support encrypt/decrypt algorithm

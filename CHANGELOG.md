@@ -1,3 +1,8 @@
+## 0.1.0
+
+* Support Groestl, Ripemd160, Shabal.
+* Add documentation to public api.
+
 ## 0.0.3
 
 * Refactor new native library.
