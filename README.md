@@ -88,5 +88,5 @@ hex.encode(list);
 ```
 
 ## TODO
-- [] Support file input
-- [] Support encrypt/decrypt algorithm
+- [ ] Support file input
+- [ ] Support encrypt/decrypt algorithm
