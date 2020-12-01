@@ -108,6 +108,25 @@ void main() {
             "a90d00da3185ee3b0212f04238f9fad58199dc63ab71c5f1968d9b03d681919b"),
       );
       expect(
+        rCrypto.hashString(HashType.GROESTL_224, ""),
+        hex.decode("f2e180fb5947be964cd584e22e496242c6a329c577fc4ce8c36d34c3"),
+      );
+      expect(
+        rCrypto.hashString(HashType.GROESTL_256, ""),
+        hex.decode(
+            "1a52d11d550039be16107f9c58db9ebcc417f16f736adb2502567119f0083467"),
+      );
+      expect(
+        rCrypto.hashString(HashType.GROESTL_384, ""),
+        hex.decode(
+            "ac353c1095ace21439251007862d6c62f829ddbe6de4f78e68d310a9205a736d8b11d99bffe448f57a1cfa2934f044a5"),
+      );
+      expect(
+        rCrypto.hashString(HashType.GROESTL_512, ""),
+        hex.decode(
+            "6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8"),
+      );
+      expect(
         rCrypto.hashString(HashType.groestlBig(64), ""),
         hex.decode(
             "6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8"),
@@ -116,6 +135,33 @@ void main() {
         rCrypto.hashString(HashType.groestlSmall(32), ""),
         hex.decode(
             "1a52d11d550039be16107f9c58db9ebcc417f16f736adb2502567119f0083467"),
+      );
+      expect(
+        rCrypto.hashString(HashType.RIPEMD160, "hello"),
+        hex.decode("108f07b8382412612c048d07d13f814118445acd"),
+      );
+      expect(
+        rCrypto.hashString(HashType.SHABAL192, "hello"),
+        hex.decode("f7303fed54ee00d610c136da488edf5dbfe75f3188dace41"),
+      );
+      expect(
+        rCrypto.hashString(HashType.SHABAL224, "hello"),
+        hex.decode("a0f6a2410c1a6f12dcc98767e9ecbfb5e49e4fe82cb5d29029571e5f"),
+      );
+      expect(
+        rCrypto.hashString(HashType.SHABAL256, "hello"),
+        hex.decode(
+            "6563a2d36f2f541e38aaa3f5375bfae8ce1dd2811cdf0993216669d48618aa9a"),
+      );
+      expect(
+        rCrypto.hashString(HashType.SHABAL384, "hello"),
+        hex.decode(
+            "ff2e07970744daa5558544ed6d3c6f56e6246ec168439dc155cfd19d38dff67762131843990a4c66af33ab12544ff952"),
+      );
+      expect(
+        rCrypto.hashString(HashType.SHABAL512, "hello"),
+        hex.decode(
+            "960314edd29daaaf71e2637f50a221201bf8d6a7f2fbd6487b306ea47f5aa70a122e9e7a23221fa97480e723ac2b3aa2786937ea44aa6fdefa1daebe4b27fbbc"),
       );
     });
 

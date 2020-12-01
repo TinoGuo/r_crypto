@@ -129,8 +129,32 @@ fn groestl_small_bench(b: &mut Criterion) {
     hash_bench!("groestl_small", constants::TYPE_GROESTL_SMALL, 32, b)
 }
 
+fn ripemd160_bench(b: &mut Criterion) {
+    hash_bench!("ripemd160", constants::TYPE_RIPEMD160, 20, b)
+}
+
+fn shabal192_bench(b: &mut Criterion) {
+    hash_bench!("shabal192", constants::TYPE_SHABAL_192, 24, b);
+}
+
+fn shabal224_bench(b: &mut Criterion) {
+    hash_bench!("shabal224", constants::TYPE_SHABAL_224, 28, b);
+}
+
+fn shabal256_bench(b: &mut Criterion) {
+    hash_bench!("shabal256", constants::TYPE_SHABAL_256, 32, b);
+}
+
+fn shabal384_bench(b: &mut Criterion) {
+    hash_bench!("shabal384", constants::TYPE_SHABAL_384, 48, b);
+}
+
+fn shabal512_bench(b: &mut Criterion) {
+    hash_bench!("shabal512", constants::TYPE_SHABAL_512, 64, b);
+}
+
 criterion_group!(benches, md5_bench, sha1_bench, sha224_bench, sha256_bench, sha384_bench, sha512_bench, sha512_trunc224_bench, sha512_trunc256_bench,
 sha3_224_bench, sha3_256_bench, sha3_384_bench, sha3_512_bench, keccak_224_bench, keccak_256_bench, keccak_384_bench, keccak_512_bench, shake_128_bench,
 shake_256_bench, whirlpool_bench, blake3_256_bench, blake3_512_bench, groestl_224_bench, groestl_256_bench, groestl_384_bench, groestl_512_bench,
-groestl_big_bench, groestl_small_bench);
+groestl_big_bench, groestl_small_bench, ripemd160_bench, shabal192_bench, shabal224_bench, shabal256_bench, sha384_bench, shabal512_bench);
 criterion_main!(benches);

@@ -32,6 +32,8 @@ pub extern fn hash_data(hash_type: u32,
     use sha3::{Keccak224, Keccak256, Keccak384, Keccak512, Sha3_224, Sha3_256, Sha3_384, Sha3_512};
     use whirlpool::Whirlpool;
     use groestl::{Groestl224, Groestl256, Groestl384, Groestl512};
+    use ripemd160::Ripemd160;
+    use shabal::{Shabal192, Shabal224, Shabal256, Shabal384, Shabal512};
     use crate::constants::*;
 
     match hash_type {
@@ -155,6 +157,24 @@ pub extern fn hash_data(hash_type: u32,
             let mut hasher = groestl::GroestlSmall::new(output_len as usize).unwrap();
             hasher.update(src);
             hasher.finalize_variable(|s| res.copy_from_slice(s));
+        }
+        TYPE_RIPEMD160 => {
+            hash_fixed!(Ripemd160, input, input_len, output, output_len, 20);
+        }
+        TYPE_SHABAL_192 => {
+            hash_fixed!(Shabal192, input, input_len, output, output_len, 24);
+        }
+        TYPE_SHABAL_224 => {
+            hash_fixed!(Shabal224, input, input_len, output, output_len, 28);
+        }
+        TYPE_SHABAL_256 => {
+            hash_fixed!(Shabal256, input, input_len, output, output_len, 32);
+        }
+        TYPE_SHABAL_384 => {
+            hash_fixed!(Shabal384, input, input_len, output, output_len, 48);
+        }
+        TYPE_SHABAL_512 => {
+            hash_fixed!(Shabal512, input, input_len, output, output_len, 64);
         }
         _ => panic!("No matched type!"),
     };
@@ -427,5 +447,53 @@ mod test_hash {
         let mut output = [0u8; 32];
         hash_data(TYPE_GROESTL_SMALL, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
         assert_eq!("1a52d11d550039be16107f9c58db9ebcc417f16f736adb2502567119f0083467", output.to_hex());
+    }
+
+    #[test]
+    fn ripemd160_test() {
+        let input = "hello".as_bytes();
+        let mut output = [0u8; 20];
+        hash_data(TYPE_RIPEMD160, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("108f07b8382412612c048d07d13f814118445acd", output.to_hex());
+    }
+
+    #[test]
+    fn shabal192_test() {
+        let input = "hello".as_bytes();
+        let mut output = [0u8; 24];
+        hash_data(TYPE_SHABAL_192, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("f7303fed54ee00d610c136da488edf5dbfe75f3188dace41", output.to_hex());
+    }
+
+    #[test]
+    fn shabal224_test() {
+        let input = "hello".as_bytes();
+        let mut output = [0u8; 28];
+        hash_data(TYPE_SHABAL_224, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("a0f6a2410c1a6f12dcc98767e9ecbfb5e49e4fe82cb5d29029571e5f", output.to_hex());
+    }
+
+    #[test]
+    fn shabal256_test() {
+        let input = "hello".as_bytes();
+        let mut output = [0u8; 32];
+        hash_data(TYPE_SHABAL_256, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("6563a2d36f2f541e38aaa3f5375bfae8ce1dd2811cdf0993216669d48618aa9a", output.to_hex());
+    }
+
+    #[test]
+    fn shabal384_test() {
+        let input = "hello".as_bytes();
+        let mut output = [0u8; 48];
+        hash_data(TYPE_SHABAL_384, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("ff2e07970744daa5558544ed6d3c6f56e6246ec168439dc155cfd19d38dff67762131843990a4c66af33ab12544ff952", output.to_hex());
+    }
+
+    #[test]
+    fn shabal512_test() {
+        let input = "hello".as_bytes();
+        let mut output = [0u8; 64];
+        hash_data(TYPE_SHABAL_512, null(), 0, input.as_ptr(), input.len() as u32, output.as_mut_ptr(), output.len() as u32);
+        assert_eq!("960314edd29daaaf71e2637f50a221201bf8d6a7f2fbd6487b306ea47f5aa70a122e9e7a23221fa97480e723ac2b3aa2786937ea44aa6fdefa1daebe4b27fbbc", output.to_hex());
     }
 }

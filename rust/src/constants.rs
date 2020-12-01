@@ -29,3 +29,11 @@ pub const TYPE_GROESTL_384: u32 = 72;
 pub const TYPE_GROESTL_512: u32 = 73;
 pub const TYPE_GROESTL_BIG: u32 = 74;
 pub const TYPE_GROESTL_SMALL: u32 = 75;
+//Ripemd160
+pub const TYPE_RIPEMD160: u32 = 80;
+//Shabal
+pub const TYPE_SHABAL_192: u32 = 90;
+pub const TYPE_SHABAL_224: u32 = 91;
+pub const TYPE_SHABAL_256: u32 = 92;
+pub const TYPE_SHABAL_384: u32 = 93;
+pub const TYPE_SHABAL_512: u32 = 94;

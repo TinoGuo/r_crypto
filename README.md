@@ -44,6 +44,13 @@ Some crypto support hardware accelerate.
     - Groestl512
     - GroestlBig
     - GroestlSmall
+- RIPEMD160 (RIPEMD-320 provides only the same security as RIPEMD-160)
+- Shabal
+    - Shabal192
+    - Shabal224
+    - Shabal256
+    - Shabal384
+    - Shabal512
 
 More digest will support soon.
 
@@ -74,4 +81,7 @@ rCrypto.hashString(HashType.blake3(length: 64), input);
 rCrypto.blake2String(Blake2Type.blake2b(32), input);
 //Also accept List<int> as parameter
 rCrypto.hashList(HashType.KECCAK_224, [0,1,2]);
+
+//Encode the list
+hex.encode(list);
 ```
