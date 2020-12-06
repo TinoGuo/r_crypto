@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - r_crypto (0.0.2):
+  - r_crypto (0.1.1):
     - Flutter
 
 DEPENDENCIES:
@@ -14,8 +14,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/r_crypto/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  r_crypto: bc79546d84d69bf33285e44e9178c11360d49d3a
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  r_crypto: 1b3d60bcf968b6e6014f80b016c4877f9bed437e
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

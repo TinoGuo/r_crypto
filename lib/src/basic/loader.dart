@@ -17,9 +17,13 @@ DynamicLibrary _open() {
       return DynamicLibrary.open(_kTestDylib);
     }
   }
-  return Platform.isAndroid
-      ? DynamicLibrary.open("librcrypto.so")
-      : DynamicLibrary.process();
+  if (Platform.isMacOS) {
+    return DynamicLibrary.open("librcrypto.dylib");
+  } else if (Platform.isAndroid) {
+    return DynamicLibrary.open("librcrypto.so");
+  } else {
+    return DynamicLibrary.process();
+  }
 }
 
 typedef GenericVecFuncNative = Void Function(Uint32, Pointer<Uint8>, Uint32,

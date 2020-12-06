@@ -65,7 +65,9 @@ More digest will support soon.
 - iOS
     - arm64
     - x86_64
-- macOS(WIP)
+- macOS
+    - x86_64
+    - arm64(WIP)
 
 ## Example Usage
 
