@@ -1,3 +1,7 @@
+## 0.1.1
+
+* bug fix
+
 ## 0.1.0
 
 * Support Groestl, Ripemd160, Shabal.

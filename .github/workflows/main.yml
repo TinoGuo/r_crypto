@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-flutter
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'beta'
+          channel: 'dev'
       # Cache rust artifact
       - uses: actions/cache@v2
         with:
@@ -139,7 +139,10 @@ jobs:
         key: ${{ runner.os }}-flutter
     - uses: subosito/flutter-action@v1
       with:
-        channel: 'beta'
+        channel: 'dev'
+    - name: enabled exp platform
+      run: |
+        flutter config --enable-macos-desktop
     - run: flutter pub get
     # Analyze our Dart code
     - run: flutter analyze
@@ -161,3 +164,8 @@ jobs:
       name: build ios example
       working-directory: ./example
       run: flutter build ios --release --no-codesign
+
+    - if: matrix.os == 'macos-latest'
+      name: build macos example
+      working-directory: ./example
+      run: flutter build macos --release

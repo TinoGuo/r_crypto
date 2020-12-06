@@ -7,20 +7,18 @@ Pod::Spec.new do |s|
   s.version          = '0.1.1'
   s.summary          = 'Rust backend support crypto library.'
   s.description      = <<-DESC
-Rust backend support crypto library.
+A new flutter plugin project.
                        DESC
   s.homepage         = 'https://github.com/TinoGuo/r_crypto'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'Tino' }
   s.source           = { :path => '.' }
-  s.public_header_files = 'Classes**/*.h'
-  s.source_files = 'Classes/**/*'
-  s.static_framework = true
-  s.vendored_libraries = "**/*.a"
-  s.dependency 'Flutter'
-  s.platform = :ios, '8.0'
+  s.source_files     = 'Classes/**/*'
+  s.static_framework = false
+  s.vendored_libraries = "**/*.dylib"
+  s.dependency 'FlutterMacOS'
 
-  # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
+  s.platform = :osx, '10.11'
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
   s.swift_version = '5.0'
 end
