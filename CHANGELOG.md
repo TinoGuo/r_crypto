@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Support MacOS plugin
+
 ## 0.1.1
 
 * bug fix
