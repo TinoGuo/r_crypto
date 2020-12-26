@@ -26,56 +26,17 @@ DynamicLibrary _open() {
   }
 }
 
-typedef GenericVecFuncNative = Void Function(Uint32, Pointer<Uint8>, Uint32,
-    Pointer<Uint8>, Uint32, Pointer<Uint8>, Uint32);
-typedef GenericVecFunc = void Function(
-    int, Pointer<Uint8>, int, Pointer<Uint8>, int, Pointer<Uint8>, int);
+typedef _FreeStringFunc = void Function(Pointer<Utf8>);
+typedef _FreeStringFuncNative = Void Function(Pointer<Utf8>);
 
-typedef RustThreeUtf8Func = Pointer<Utf8> Function(
-    Pointer<Utf8>, Pointer<Utf8>, Pointer<Utf8>);
-typedef RustThreeUtf8FuncNative = Pointer<Utf8> Function(
-    Pointer<Utf8>, Pointer<Utf8>, Pointer<Utf8>);
+final loader = _Loader._();
 
-typedef RustSingleUint8Func = Pointer<Uint8> Function(Pointer<Utf8>);
-typedef RustSingleUint8FuncNative = Pointer<Uint8> Function(Pointer<Utf8>);
-
-typedef FreeStringFunc = void Function(Pointer<Utf8>);
-typedef FreeStringFuncNative = Void Function(Pointer<Utf8>);
-
-extension PointerChecker on Pointer {
-  bool get isValid => this != null && this.address != 0;
-}
-
-final loader = Loader._();
-
-class Loader {
-  Loader._();
+class _Loader {
+  _Loader._();
 
   final freeCString = lazyOf(() => nativeLib
-      .lookup<NativeFunction<FreeStringFuncNative>>("rust_cstr_free")
-      .asFunction<FreeStringFunc>());
-
-  String executeBlock3(
-    String arg1,
-    String arg2,
-    String arg3,
-    RustThreeUtf8Func function,
-  ) {
-    final arg1Name = Utf8.toUtf8(arg1);
-    final arg2Name = Utf8.toUtf8(arg2);
-    final arg3Name = Utf8.toUtf8(arg3);
-    final resPointer = function(arg1Name, arg2Name, arg3Name);
-    final resultStr = Utf8.fromUtf8(resPointer);
-    freeCStrings([arg1Name, arg2Name, arg3Name, resPointer]);
-    return resultStr;
-  }
-
-  Pointer<Uint8> executeUint8Block(String input, RustSingleUint8Func function) {
-    final argName = Utf8.toUtf8(input);
-    final resPointer = function(argName);
-    freeCStrings([argName]);
-    return resPointer;
-  }
+      .lookup<NativeFunction<_FreeStringFuncNative>>("rust_cstr_free")
+      .asFunction<_FreeStringFunc>());
 
   Pointer<Uint8> uint8ListToArray(List<int> list) {
     final ptr = allocate<Uint8>(count: list.length);
@@ -86,7 +47,7 @@ class Loader {
   }
 
   List<int> uint8ArrayToList(Pointer<Uint8> pointer, int length) {
-    List<int> result = List(length);
+    List<int> result = List.filled(length, 0);
     for (var i = 0; i < length; i++) {
       result[i] = pointer.elementAt(i).value;
     }

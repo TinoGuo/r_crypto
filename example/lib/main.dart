@@ -1,10 +1,10 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:convert/convert.dart';
-import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:r_crypto/r_crypto.dart';
+import 'package:r_crypto_example/data.dart';
+import 'package:r_crypto_example/file.dart';
 import 'package:r_crypto_example/hash.dart';
 import 'package:r_crypto_example/profile.dart';
 
@@ -44,49 +44,21 @@ class DemoScreen extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (_) => ProfileListScreen()));
               },
-            )
+            ),
+            if (Platform.isMacOS)
+              ListTile(
+                title: Text('File'),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => FileListScreen()));
+                },
+              ),
           ],
         ),
       ),
     );
   }
 }
-
-var list = [
-  ProfileData(
-    'MD5',
-    rustFunc: (input) => rHash.hashString(HashType.MD5, input),
-    dartFunc: (input) => crypto.md5.executeDart(input),
-  ),
-  ProfileData(
-    'SHA1',
-    rustFunc: (input) => rHash.hashString(HashType.SHA1, input),
-    dartFunc: (input) => crypto.sha1.executeDart(input),
-  ),
-  ProfileData(
-    'SHA256',
-    rustFunc: (input) => rHash.hashString(HashType.SHA256, input),
-    dartFunc: (input) => crypto.sha256.executeDart(input),
-  ),
-  ProfileData(
-    'SHA384',
-    rustFunc: (input) => rHash.hashString(HashType.SHA384, input),
-    dartFunc: (input) => crypto.sha384.executeDart(input),
-  ),
-  ProfileData(
-    'SHA512',
-    rustFunc: (input) => rHash.hashString(HashType.SHA512, input),
-    dartFunc: (input) => crypto.sha512.executeDart(input),
-  ),
-  ProfileData(
-    'SHA512_TRUNC224',
-    rustFunc: (input) => rHash.hashString(HashType.SHA512_TRUNC224, input),
-  ),
-  ProfileData(
-    'SHA512_TRUNC256',
-    rustFunc: (input) => rHash.hashString(HashType.SHA512_TRUNC256, input),
-  ),
-];
 
 class HashListScreen extends StatefulWidget {
   @override
@@ -129,8 +101,26 @@ class _ProfileListScreenState extends State<ProfileListScreen> {
   }
 }
 
-extension HashExt on crypto.Hash {
-  List<int> executeDart(String input) => this.convert(utf8.encode(input)).bytes;
+class FileListScreen extends StatefulWidget {
+  @override
+  _FileListScreenState createState() => _FileListScreenState();
+}
+
+class _FileListScreenState extends State<FileListScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('RCrypto file'),
+      ),
+      body: ListView.builder(
+        itemBuilder: (context, index) => FileItemWidget(
+          profileData: fileList[index],
+        ),
+        itemCount: fileList.length,
+      ),
+    );
+  }
 }
 
 extension ListExt on List<int> {

@@ -26,6 +26,13 @@ dependencies:
   crypto: ^2.1.5
   convert: 2.1.1
 
+  file_chooser:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/file_chooser
+      ref: 040f36c
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
