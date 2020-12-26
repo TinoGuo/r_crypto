@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:convert/convert.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:r_crypto/r_crypto.dart';
@@ -165,24 +167,31 @@ void main() {
         hex.decode(
             "960314edd29daaaf71e2637f50a221201bf8d6a7f2fbd6487b306ea47f5aa70a122e9e7a23221fa97480e723ac2b3aa2786937ea44aa6fdefa1daebe4b27fbbc"),
       );
-    });
-
-    test('verify blake2', () {
       expect(
-        rHash.blake2String(Blake2Type.blake2b(64), "hello"),
+        rHash.hashString(HashType.blake2(ExtensionHash.Blake2b, 64), "hello"),
         hex.decode(
             "e4cfa39a3d37be31c59609e807970799caa68a19bfaa15135f165085e01d41a65ba1e1b146aeb6bd0092b49eac214c103ccfa3a365954bbbe52f74a2b3620c94"),
       );
       expect(
-        rHash.blake2String(Blake2Type.blake2b(64), "hello", salt: [0, 1, 2]),
+        rHash.hashString(
+          HashType.blake2(ExtensionHash.Blake2b, 64),
+          "hello",
+          salt: utf8.decode([0, 1, 2]),
+        ),
         hex.decode(
             "145f3c6814436c246f00e5f9ac50f8f651d134be36c51653330620e158aa006b78c5029c1d6025610796ddcaf6dd0b933367b3165749872b5c297af9a4000c9b"),
       );
       expect(
-        rHash.blake2String(Blake2Type.blake2s(32), "hello"),
+        rHash.hashString(HashType.blake2(ExtensionHash.Blake2s, 32), "hello"),
         hex.decode(
             "19213bacc58dee6dbde3ceb9a47cbb330b3d86f8cca8997eb00be456f140ca25"),
       );
+    });
+
+    test('should panic', () {
+      expect(() {
+        HashType.blake2(ExtensionHash.Blake2s, 33);
+      }, throwsAssertionError);
     });
   });
 }

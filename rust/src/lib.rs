@@ -1,5 +1,6 @@
 pub mod constants;
 #[macro_use]
 mod util;
+mod error;
 pub mod hash;
-pub mod blake2;
+pub mod hash_file;

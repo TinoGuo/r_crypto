@@ -36,9 +36,11 @@ use std::os::raw::c_char;
 // }
 
 #[no_mangle]
-pub extern fn rust_cstr_free(s: *mut c_char) {
+pub extern "C" fn rust_cstr_free(s: *mut c_char) {
     unsafe {
-        if s.is_null() { return; }
+        if s.is_null() {
+            return;
+        }
         CString::from_raw(s)
     };
 }

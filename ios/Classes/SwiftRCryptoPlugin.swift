@@ -13,8 +13,7 @@ public class SwiftRCryptoPlugin: NSObject, FlutterPlugin {
         // dummy calls to prevent tree shaking
         let fake: UnsafeMutablePointer<UInt8>? = nil
         let len: UInt32 = 0
-        hash_data(len, fake, len, fake, len, fake, len)
-        blake2b(fake, len, fake, len, fake, len, fake, len, fake, len)
-        blake2s(fake, len, fake, len, fake, len, fake, len, fake, len)
+        hash_data(0, fake, len, fake, len, fake, len, fake, len, fake, len)
+        hash_file(0, fake, len, fake, len, fake, len, "", fake, len)
     }
 }

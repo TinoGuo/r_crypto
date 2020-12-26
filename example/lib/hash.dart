@@ -2,7 +2,7 @@ import 'package:convert/convert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:r_crypto_example/profile.dart';
+import 'package:r_crypto_example/data.dart';
 
 class HashItemWidget extends StatelessWidget {
   final ProfileData profileData;

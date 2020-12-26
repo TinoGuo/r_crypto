@@ -1,24 +1,37 @@
-use criterion::{Criterion, criterion_group, criterion_main};
+use criterion::{criterion_group, criterion_main, Criterion};
 
-#[path = "../src/hash.rs"]
-mod hash;
 #[path = "../src/constants.rs"]
 mod constants;
+#[path = "../src/error.rs"]
+mod error;
+#[path = "../src/hash.rs"]
+mod hash;
 
 const INPUT: &[u8] = "hello".as_bytes();
 
 macro_rules! hash_bench {
-    ($name: expr, $type: expr, $len: expr, $c: expr) => {
-    {
+    ($name: expr, $type: expr, $len: expr, $c: expr) => {{
         use std::ptr::null;
 
         let mut output = [0u8; $len];
-        $c.bench_function($name, |br|
-            br.iter(||
-                hash::hash_data($type, null(), 0, INPUT.as_ptr(), INPUT.len() as u32, output.as_mut_ptr(), output.len() as u32)
-        ));
-    }
-    };
+        $c.bench_function($name, |br| {
+            br.iter(|| {
+                hash::hash_data(
+                    $type,
+                    null(),
+                    0,
+                    null(),
+                    0,
+                    null(),
+                    0,
+                    INPUT.as_ptr(),
+                    INPUT.len() as u32,
+                    output.as_mut_ptr(),
+                    output.len() as u32,
+                )
+            })
+        });
+    }};
 }
 
 fn md5_bench(b: &mut Criterion) {
@@ -46,11 +59,21 @@ fn sha512_bench(b: &mut Criterion) {
 }
 
 fn sha512_trunc224_bench(b: &mut Criterion) {
-    hash_bench!("sha512_trunc224", constants::TYPE_SHA512_TRUNC224, 28usize, b)
+    hash_bench!(
+        "sha512_trunc224",
+        constants::TYPE_SHA512_TRUNC224,
+        28usize,
+        b
+    )
 }
 
 fn sha512_trunc256_bench(b: &mut Criterion) {
-    hash_bench!("sha512_trunc256", constants::TYPE_SHA512_TRUNC256, 32usize, b)
+    hash_bench!(
+        "sha512_trunc256",
+        constants::TYPE_SHA512_TRUNC256,
+        32usize,
+        b
+    )
 }
 
 fn sha3_224_bench(b: &mut Criterion) {
@@ -153,8 +176,40 @@ fn shabal512_bench(b: &mut Criterion) {
     hash_bench!("shabal512", constants::TYPE_SHABAL_512, 64, b);
 }
 
-criterion_group!(benches, md5_bench, sha1_bench, sha224_bench, sha256_bench, sha384_bench, sha512_bench, sha512_trunc224_bench, sha512_trunc256_bench,
-sha3_224_bench, sha3_256_bench, sha3_384_bench, sha3_512_bench, keccak_224_bench, keccak_256_bench, keccak_384_bench, keccak_512_bench, shake_128_bench,
-shake_256_bench, whirlpool_bench, blake3_256_bench, blake3_512_bench, groestl_224_bench, groestl_256_bench, groestl_384_bench, groestl_512_bench,
-groestl_big_bench, groestl_small_bench, ripemd160_bench, shabal192_bench, shabal224_bench, shabal256_bench, sha384_bench, shabal512_bench);
+criterion_group!(
+    benches,
+    md5_bench,
+    sha1_bench,
+    sha224_bench,
+    sha256_bench,
+    sha384_bench,
+    sha512_bench,
+    sha512_trunc224_bench,
+    sha512_trunc256_bench,
+    sha3_224_bench,
+    sha3_256_bench,
+    sha3_384_bench,
+    sha3_512_bench,
+    keccak_224_bench,
+    keccak_256_bench,
+    keccak_384_bench,
+    keccak_512_bench,
+    shake_128_bench,
+    shake_256_bench,
+    whirlpool_bench,
+    blake3_256_bench,
+    blake3_512_bench,
+    groestl_224_bench,
+    groestl_256_bench,
+    groestl_384_bench,
+    groestl_512_bench,
+    groestl_big_bench,
+    groestl_small_bench,
+    ripemd160_bench,
+    shabal192_bench,
+    shabal224_bench,
+    shabal256_bench,
+    sha384_bench,
+    shabal512_bench
+);
 criterion_main!(benches);

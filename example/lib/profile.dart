@@ -1,19 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-typedef RustFunc = List<int> Function(String);
-typedef DartFunc = List<int> Function(String);
+import 'package:r_crypto_example/data.dart';
 
 const String input = '1234567890zxcvbnmasdfghjklqwertyuiop';
-
-class ProfileData {
-  final String name;
-  final RustFunc rustFunc;
-  final DartFunc dartFunc;
-
-  const ProfileData(this.name, {this.rustFunc, this.dartFunc});
-}
 
 class ProfileItemWidget extends StatelessWidget {
   final ProfileData profileData;

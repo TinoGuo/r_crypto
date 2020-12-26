@@ -17,20 +17,23 @@ cbindgen = "0.15.0"
 [dev-dependencies]
 rustc-serialize = "^0.3"
 criterion = "0.3"
+serial_test = "0.5.1"
+serial_test_derive = "0.5.1"
 
 [[bench]]
 name = "bench"
 harness = false
 
 [dependencies]
-md-5 = { version = "0.9.1", default-features = false }
-sha-1 = { version = "0.9.2", default-features = false }
-sha2 = { version = "0.9.2", default-features = false }
-sha3 = { version = "0.9.1", default-features = false }
-blake2 = { version = "0.9.1", default-features = false }
-blake3 = { version = "0.3.7", default-features = false }
-whirlpool = { version = "0.9.0", default-features = false }
-hmac = { version = "0.10.1", default-features = false }
-groestl = { version = "0.9.0", default-features = false }
-ripemd160 = { version = "0.9.1", default-features = false }
-shabal = { version = "0.3.0", default-features = false }
+digest = { version = "0.9.0", default-features = true }
+md-5 = { version = "0.9.1", default-features = true }
+sha-1 = { version = "0.9.2", default-features = true }
+sha2 = { version = "0.9.2", default-features = true }
+sha3 = { version = "0.9.1", default-features = true }
+blake2 = { version = "0.9.1", default-features = true }
+blake3 = { version = "0.3.7", default-features = true }
+whirlpool = { version = "0.9.0", default-features = true }
+hmac = { version = "0.10.1", default-features = true }
+groestl = { version = "0.9.0", default-features = true }
+ripemd160 = { version = "0.9.1", default-features = true }
+shabal = { version = "0.3.0", default-features = true }

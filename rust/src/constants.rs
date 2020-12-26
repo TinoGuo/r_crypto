@@ -37,3 +37,6 @@ pub const TYPE_SHABAL_224: u32 = 91;
 pub const TYPE_SHABAL_256: u32 = 92;
 pub const TYPE_SHABAL_384: u32 = 93;
 pub const TYPE_SHABAL_512: u32 = 94;
+//Blake2
+pub const TYPE_BLAKE2B: u32 = 100;
+pub const TYPE_BLAKE2S: u32 = 101;
