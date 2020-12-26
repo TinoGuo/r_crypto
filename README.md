@@ -77,18 +77,18 @@ More digest will support soon.
 import 'package:r_crypto/r_crypto.dart';
 
 //For fixed output length digest
-rCrypto.hashString(HashType.MD5, input);
+rHash.hashString(HashType.MD5, input);
 //For dynamic output length digest
-rCrypto.hashString(HashType.blake3(length: 64), input);
-//For Blake2 only
-rCrypto.blake2String(Blake2Type.blake2b(32), input);
+rHash.hashString(HashType.blake3(length: 64), input);
 //Also accept List<int> as parameter
-rCrypto.hashList(HashType.KECCAK_224, [0,1,2]);
+rHash.hashList(HashType.KECCAK_224, [0,1,2]);
+//Hash File
+rHash.filePath(HashType.blake3(length: 32), path);
 
 //Encode the list
 hex.encode(list);
 ```
 
 ## TODO
-- [ ] Support file input
+- [x] Support file input
 - [ ] Support encrypt/decrypt algorithm

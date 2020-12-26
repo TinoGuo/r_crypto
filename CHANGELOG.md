@@ -1,3 +1,9 @@
+## 0.2.0
+* Support File input.
+* Refactor Rust FFI, support error code return.
+* Unify the hash interface.
+* Fix issue.
+
 ## 0.1.2
 
 * Support MacOS plugin

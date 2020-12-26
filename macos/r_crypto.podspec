@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'r_crypto'
-  s.version          = '0.1.2'
+  s.version          = '0.2.0'
   s.summary          = 'Rust backend support crypto library.'
   s.description      = <<-DESC
 A new flutter plugin project.
