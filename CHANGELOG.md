@@ -1,3 +1,6 @@
+## 0.2.1
+* Update document
+
 ## 0.2.0
 * Support File input.
 * Refactor Rust FFI, support error code return.
