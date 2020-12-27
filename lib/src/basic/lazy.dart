@@ -1,10 +1,11 @@
-Lazy<T> lazyOf<T>(Function _func) => new Lazy(_func);
+/// Lazy init heavy function or instance.
+_Lazy<T> lazyOf<T>(Function _func) => new _Lazy(_func);
 
-class Lazy<T> {
+class _Lazy<T> {
   final Function _func;
   bool _isEvaluated = false;
 
-  Lazy(this._func);
+  _Lazy(this._func);
 
   T _value;
 
