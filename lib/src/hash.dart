@@ -56,9 +56,11 @@ mixin _Hash {
       .lookupFunction<_GenericFileFuncNative, _GenericFileFunc>("hash_file"));
 
   /// [input] is the source string to hash.
-  /// [key] is optional
+  /// [key] is optional, only for [HashType.blake2] and [HashType.blake3]
+  /// [persona] is optional, only for [HashType.blake2]
+  /// [salt] is optional, only for [HashType.blake2]
   ///
-  /// Return the int of [List], which can be encode as hex string.
+  /// Return the int of [List], which can be encode as hex string or utf8.
   List<int> hashString(HashType hashType, String input,
       {String key, String persona, String salt}) {
     List<int> list = utf8.encode(input);
@@ -72,9 +74,11 @@ mixin _Hash {
   }
 
   /// [input] is the source list to hash, which can be decode from hex string.
-  /// [key] is optional, currently only for Blake3.
+  /// [key] is optional, only for [HashType.blake2] and [HashType.blake3]
+  /// [persona] is optional, only for [HashType.blake2]
+  /// [salt] is optional, only for [HashType.blake2]
   ///
-  /// Return the int of [List], which can be encode as hex string.
+  /// Return the int of [List], which can be encode as hex string or utf8.
   List<int> hashList(HashType hashType, List<int> list,
       {List<int> key, List<int> persona, List<int> salt}) {
     Pointer<Uint8> pointer = loader.uint8ListToArray(list);
@@ -104,6 +108,14 @@ mixin _Hash {
     return output;
   }
 
+  /// [path] is the source file path to hash, which can be decode from hex string.
+  /// [key] is optional, only for [HashType.blake2] and [HashType.blake3]
+  /// [persona] is optional, only for [HashType.blake2]
+  /// [salt] is optional, only for [HashType.blake2]
+  ///
+  /// Make sure the application has permission to visit the file.
+  ///
+  /// Return the int of [List], which can be encode as hex string or utf8.
   List<int> filePath(HashType hashType, String path,
       {List<int> key, List<int> persona, List<int> salt}) {
     Pointer<Utf8> pathPointer = Utf8.toUtf8(path);

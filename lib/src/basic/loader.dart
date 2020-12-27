@@ -83,6 +83,7 @@ class _Loader {
   }
 }
 
+/// Wrap the error with uninit
 class UnInitializationError extends Error {
   final Object message;
 
