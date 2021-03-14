@@ -49,11 +49,11 @@ typedef _GenericFileFunc = int Function(
     int outputLen);
 
 mixin _Hash {
-  final _hash = lazyOf(() => nativeLib
-      .lookupFunction<_GenericVecFuncNative, _GenericVecFunc>("hash_data"));
+  late final _GenericVecFunc _hash = nativeLib
+      .lookupFunction<_GenericVecFuncNative, _GenericVecFunc>("hash_data");
 
-  final _hashFile = lazyOf(() => nativeLib
-      .lookupFunction<_GenericFileFuncNative, _GenericFileFunc>("hash_file"));
+  late final _hashFile = nativeLib
+      .lookupFunction<_GenericFileFuncNative, _GenericFileFunc>("hash_file");
 
   /// [input] is the source string to hash.
   /// [key] is optional, only for [HashType.blake2] and [HashType.blake3]
@@ -62,12 +62,12 @@ mixin _Hash {
   ///
   /// Return the int of [List], which can be encode as hex string or utf8.
   List<int> hashString(HashType hashType, String input,
-      {String key, String persona, String salt}) {
+      {String? key, String? persona, String? salt}) {
     List<int> list = utf8.encode(input);
-    List<int> keyList = key == null || key.isEmpty ? null : utf8.encode(key);
-    List<int> personaList =
+    List<int>? keyList = key == null || key.isEmpty ? null : utf8.encode(key);
+    List<int>? personaList =
         persona == null || persona.isEmpty ? null : utf8.encode(persona);
-    List<int> saltList =
+    List<int>? saltList =
         salt == null || salt.isEmpty ? null : utf8.encode(salt);
     return hashList(hashType, list,
         key: keyList, persona: personaList, salt: saltList);
@@ -80,17 +80,16 @@ mixin _Hash {
   ///
   /// Return the int of [List], which can be encode as hex string or utf8.
   List<int> hashList(HashType hashType, List<int> list,
-      {List<int> key, List<int> persona, List<int> salt}) {
+      {List<int>? key, List<int>? persona, List<int>? salt}) {
     Pointer<Uint8> pointer = loader.uint8ListToArray(list);
-    Pointer<Uint8> outputPointer = allocate(count: hashType.length);
-    var keyP = key.isNullOrEmpty ? nullptr : loader.uint8ListToArray(key);
-    var keyLen = key.isNullOrEmpty ? 0 : key.length;
-    var personaP =
-        persona.isNullOrEmpty ? nullptr : loader.uint8ListToArray(persona);
-    var personaLen = persona.isNullOrEmpty ? 0 : persona.length;
-    var saltP = salt.isNullOrEmpty ? nullptr : loader.uint8ListToArray(salt);
-    var saltLen = salt.isNullOrEmpty ? 0 : salt.length;
-    _hash()(
+    Pointer<Uint8> outputPointer = calloc.allocate(hashType.length);
+    var keyP = loader.uint8ListToArray(key);
+    var keyLen = key == null ? 0 : key.length;
+    var personaP = loader.uint8ListToArray(persona);
+    var personaLen = persona == null ? 0 : persona.length;
+    var saltP = loader.uint8ListToArray(salt);
+    var saltLen = salt == null ? 0 : salt.length;
+    _hash(
       hashType.type,
       keyP,
       keyLen,
@@ -117,17 +116,16 @@ mixin _Hash {
   ///
   /// Return the int of [List], which can be encode as hex string or utf8.
   List<int> filePath(HashType hashType, String path,
-      {List<int> key, List<int> persona, List<int> salt}) {
-    Pointer<Utf8> pathPointer = Utf8.toUtf8(path);
-    Pointer<Uint8> outputPointer = allocate(count: hashType.length);
-    var keyP = key.isNullOrEmpty ? nullptr : loader.uint8ListToArray(key);
-    var keyLen = key.isNullOrEmpty ? 0 : key.length;
-    var personaP =
-        persona.isNullOrEmpty ? nullptr : loader.uint8ListToArray(persona);
-    var personaLen = persona.isNullOrEmpty ? 0 : persona.length;
-    var saltP = salt.isNullOrEmpty ? nullptr : loader.uint8ListToArray(salt);
-    var saltLen = salt.isNullOrEmpty ? 0 : salt.length;
-    var error = _hashFile()(
+      {List<int>? key, List<int>? persona, List<int>? salt}) {
+    Pointer<Utf8> pathPointer = path.toNativeUtf8();
+    Pointer<Uint8> outputPointer = calloc.allocate(hashType.length);
+    var keyP = loader.uint8ListToArray(key);
+    var keyLen = key == null ? 0 : key.length;
+    var personaP = loader.uint8ListToArray(persona);
+    var personaLen = persona == null ? 0 : persona.length;
+    var saltP = loader.uint8ListToArray(salt);
+    var saltLen = salt == null ? 0 : salt.length;
+    var error = _hashFile(
       hashType.type,
       keyP,
       keyLen,
@@ -148,8 +146,4 @@ mixin _Hash {
       throw RustError(error);
     }
   }
-}
-
-extension _ListChecker on List<int> {
-  bool get isNullOrEmpty => this == null || this.isEmpty;
 }

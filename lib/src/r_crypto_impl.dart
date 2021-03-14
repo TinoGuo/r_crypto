@@ -5,7 +5,6 @@ import 'package:ffi/ffi.dart';
 import 'package:r_crypto/r_crypto.dart';
 import 'package:r_crypto/src/basic/errors.dart';
 import 'package:r_crypto/src/basic/hash_type.dart';
-import 'package:r_crypto/src/basic/lazy.dart';
 import 'package:r_crypto/src/basic/loader.dart';
 
 part 'hash.dart';
