@@ -2,7 +2,6 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
-import 'package:r_crypto/src/basic/lazy.dart';
 
 const String _kTestDylib =
     'rust/target/x86_64-apple-darwin/release/librcrypto.dylib';
@@ -34,12 +33,14 @@ final loader = _Loader._();
 class _Loader {
   _Loader._();
 
-  final freeCString = lazyOf(() => nativeLib
-      .lookup<NativeFunction<_FreeStringFuncNative>>("rust_cstr_free")
-      .asFunction<_FreeStringFunc>());
+  late final _FreeStringFunc freeCString = nativeLib
+      .lookupFunction<_FreeStringFuncNative, _FreeStringFunc>("rust_cstr_free");
 
-  Pointer<Uint8> uint8ListToArray(List<int> list) {
-    final ptr = allocate<Uint8>(count: list.length);
+  Pointer<Uint8> uint8ListToArray(List<int>? list) {
+    if (list == null) {
+      return nullptr;
+    }
+    final ptr = calloc.allocate<Uint8>(list.length);
     for (var i = 0; i < list.length; i++) {
       ptr.elementAt(i).value = list[i];
     }
@@ -55,7 +56,7 @@ class _Loader {
   }
 
   Pointer<Uint16> uint16ListToArray(List<int> list) {
-    final ptr = allocate<Uint16>(count: list.length);
+    final ptr = calloc.allocate<Uint16>(list.length);
     for (var i = 0; i < list.length; i++) {
       ptr.elementAt(i).value = list[i];
     }
@@ -63,7 +64,7 @@ class _Loader {
   }
 
   Pointer<Uint32> uint32ListToArray(List<int> list) {
-    final ptr = allocate<Uint32>(count: list.length);
+    final ptr = calloc.allocate<Uint32>(list.length);
     for (var i = 0; i < list.length; i++) {
       ptr.elementAt(i).value = list[i];
     }
@@ -71,21 +72,21 @@ class _Loader {
   }
 
   void freeCStrings(List<Pointer<Utf8>> pointerList) {
-    pointerList.forEach((element) => freeCString()(element));
+    pointerList.forEach((element) => freeCString(element));
   }
 
   void freePointer<T extends NativeType>(Pointer<T> pointer) {
-    free(pointer);
+    calloc.free(pointer);
   }
 
   void freePointerList<T extends NativeType>(List<Pointer<T>> pointerList) {
-    pointerList.forEach((element) => free(element));
+    pointerList.forEach((element) => calloc.free(element));
   }
 }
 
 /// Wrap the error with uninit
 class UnInitializationError extends Error {
-  final Object message;
+  final Object? message;
 
   UnInitializationError([this.message]);
 
