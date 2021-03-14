@@ -5,7 +5,7 @@ import 'package:ffi/ffi.dart';
 
 const String _kTestDylib =
     'rust/target/x86_64-apple-darwin/release/librcrypto.dylib';
-final DynamicLibrary nativeLib = _open();
+late final DynamicLibrary nativeLib = _open();
 
 DynamicLibrary _open() {
   if (Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -28,7 +28,7 @@ DynamicLibrary _open() {
 typedef _FreeStringFunc = void Function(Pointer<Utf8>);
 typedef _FreeStringFuncNative = Void Function(Pointer<Utf8>);
 
-final loader = _Loader._();
+late final loader = _Loader._();
 
 class _Loader {
   _Loader._();
