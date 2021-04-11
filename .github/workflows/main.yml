@@ -76,6 +76,7 @@ jobs:
           rust/target/aarch64-linux-android/release/librcrypto.so
           rust/target/armv7-linux-androideabi/release/librcrypto.so
           rust/target/i686-linux-android/release/librcrypto.so
+          rust/target/universal/release/librcrypto.a
           rust/target/x86_64-apple-darwin/release/librcrypto.dylib
           rust/target/x86_64-apple-ios/release/librcrypto.a
           rust/target/x86_64-linux-android/release/librcrypto.so
