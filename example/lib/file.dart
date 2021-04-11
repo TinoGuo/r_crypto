@@ -68,7 +68,9 @@ class _FileScreenState extends State<FileScreen> {
             onPressed: () async {
               if (Platform.isAndroid || Platform.isIOS) {
                 // No Op
-              } else if (Platform.isMacOS) {
+              } else if (Platform.isMacOS ||
+                  Platform.isLinux ||
+                  Platform.isWindows) {
                 var picker = await showOpenPanel();
                 if (picker != null && !picker.canceled) {
                   var file = File(picker.paths.single);

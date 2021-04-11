@@ -5,10 +5,10 @@ SOURCES=$(sort $(wildcard ./src/*.rs ./src/**/*.rs))
 OS_NAME=$(shell uname | tr '[:upper:]' '[:lower:]')
 PATH := $(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin:$(PATH)
 
-ANDROID_AARCH64_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/aarch64-linux-android29-clang
-ANDROID_ARMV7_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/armv7a-linux-androideabi29-clang
-ANDROID_I686_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/i686-linux-android29-clang
-ANDROID_X86_64_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/x86_64-linux-android29-clang
+ANDROID_AARCH64_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/aarch64-linux-android30-clang
+ANDROID_ARMV7_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/armv7a-linux-androideabi30-clang
+ANDROID_I686_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/i686-linux-android30-clang
+ANDROID_X86_64_LINKER=$(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(OS_NAME)-x86_64/bin/x86_64-linux-android30-clang
 
 SHELL := /bin/bash
 
@@ -30,7 +30,8 @@ init:
 	rustup target add aarch64-apple-ios x86_64-apple-ios
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 	rustup target add x86_64-apple-darwin
-## add support later	rustup target add aarch64-apple-darwin
+	rustup target add i686-pc-windows-gnu x86_64-pc-windows-gnu
+	rustup target add aarch64-apple-darwin
 	@if [ $$(uname) == "Darwin" ] ; then cargo install cargo-lipo ; fi
 	cargo install cbindgen
 
@@ -41,7 +42,7 @@ init:
 # ##############################################################################
 
 ## all: Compile iOS, Android, MacOS and bindings targets
-all: ios android macos bindings
+all: ios android macos windows bindings
 
 ## ios: Compile the iOS universal library
 ios: target/universal/release/librcrypto.a
@@ -68,22 +69,29 @@ target/armv7-linux-androideabi/release/librcrypto.so: $(SOURCES) ndk-home
 target/i686-linux-android/release/librcrypto.so: $(SOURCES) ndk-home
 	CC_i686_linux_android=$(ANDROID_I686_LINKER) \
 	CARGO_TARGET_I686_LINUX_ANDROID_LINKER=$(ANDROID_I686_LINKER) \
-		cargo  build --target i686-linux-android --release
+		cargo build --target i686-linux-android --release
 
 target/x86_64-linux-android/release/libcrypto.so: $(SOURCES) ndk-home
 	CC_x86_64_linux_android=$(ANDROID_X86_64_LINKER) \
 	CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER=$(ANDROID_X86_64_LINKER) \
-		cargo  build --target x86_64-linux-android --release
+		cargo build --target x86_64-linux-android --release
 
 ## macos: Compile the macos targets
 
-macos: target/x86_64-apple-darwin/release/librcrypto.a
+macos: target/x86_64-apple-darwin/release/librcrypto.dylib
 
-target/x86_64-apple-darwin/release/librcrypto.a: $(SOURCES) ndk-home
+target/x86_64-apple-darwin/release/librcrypto.dylib: $(SOURCES) ndk-home
 	cargo build --target x86_64-apple-darwin --release
 
-## target/aarch64-apple-darwin/release/librcrypto.a: $(SOURCES) ndk-home
+## target/aarch64-apple-darwin/release/librcrypto.dylib: $(SOURCES) ndk-home
 ##	cargo build --target aarch64-apple-darwin --release
+
+## windows: Compile the windows targets
+
+windows: target/x86_64-pc-windows-gnu/release/rcrypto.dll
+
+target/x86_64-pc-windows-gnu/release/rcrypto.dll: $(SOURCES)
+	cargo build --target x86_64-pc-windows-gnu --release
 
 .PHONY: ndk-home
 ndk-home:

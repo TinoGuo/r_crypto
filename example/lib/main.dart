@@ -45,7 +45,7 @@ class DemoScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => ProfileListScreen()));
               },
             ),
-            if (Platform.isMacOS)
+            if (Platform.isMacOS || Platform.isLinux || Platform.isWindows)
               ListTile(
                 title: Text('File'),
                 onTap: () {

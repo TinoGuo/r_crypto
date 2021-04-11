@@ -13,12 +13,18 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, windows-latest]
         include:
 #          - os: ubuntu-latest
 #            flutter_path: /opt/hostedtoolcache/flutter
+#          - os: macos-10.15
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
+#          - os: macos-11.0
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
           - os: macos-latest
             flutter_path: /Users/runner/hostedtoolcache/flutter
+          - os: windows-latest
+            flutter_path: C:\Users\runneradmin\hostedtoolcache\flutter
       fail-fast: false
 
     steps:
@@ -27,18 +33,10 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ matrix.flutter_path }}
-          key: ${{ runner.os }}-flutter
+          key: ${{ matrix.os }}-flutter
       - uses: subosito/flutter-action@v1
         with:
           channel: 'stable'
-      # Cache rust artifact
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
   build-rust-and-test:
     runs-on: ${{ matrix.os }}
@@ -50,24 +48,19 @@ jobs:
         include:
           #          - os: ubuntu-latest
           #            flutter_path: /opt/hostedtoolcache/flutter
+#          - os: macos-10.15
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
+#          - os: macos-11.0
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
           - os: macos-latest
             flutter_path: /Users/runner/hostedtoolcache/flutter
       fail-fast: false
 
     steps:
     - uses: actions/checkout@v2
-    - name: Cache Rust
-      id: cache-rust
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
+    - name: install mingw-w64
+      run: |
+        brew install mingw-w64
     - name: build and test rust
       run: |
         make init
@@ -78,7 +71,35 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: crypto-target
-        path: rust/target/*/release/librcrypto.*
+        path: |
+          rust/target/aarch64-apple-ios/release/librcrypto.a
+          rust/target/aarch64-linux-android/release/librcrypto.so
+          rust/target/armv7-linux-androideabi/release/librcrypto.so
+          rust/target/i686-linux-android/release/librcrypto.so
+          rust/target/universal/release/librcrypto.a
+          rust/target/x86_64-apple-darwin/release/librcrypto.dylib
+          rust/target/x86_64-apple-ios/release/librcrypto.a
+          rust/target/x86_64-linux-android/release/librcrypto.so
+          rust/target/x86_64-pc-windows-gnu/release/rcrypto.dll
+
+  publish-artifacts:
+    runs-on: ubuntu-latest
+    needs: build-rust-and-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: download rust target
+        uses: actions/download-artifact@v2
+        with:
+          name: crypto-target
+          path: rust/target
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: rust/target/x86_64-pc-windows-gnu/release/rcrypto.dll
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   bench-rust:
     runs-on: ${{ matrix.os }}
@@ -90,25 +111,18 @@ jobs:
         include:
           #          - os: ubuntu-latest
           #            flutter_path: /opt/hostedtoolcache/flutter
+#          - os: macos-10.15
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
+#          - os: macos-11.0
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
           - os: macos-latest
             flutter_path: /Users/runner/hostedtoolcache/flutter
       fail-fast: false
 
     steps:
     - uses: actions/checkout@v2
-    - name: Cache Rust
-      id: cache-rust
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - name: bench crypto
+    - if: startsWith(github.ref, 'refs/tags/')
+      name: bench crypto
       run: cargo bench --verbose
       working-directory: rust
 
@@ -118,12 +132,18 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, windows-latest]
         include:
 #          - os: ubuntu-latest
 #            flutter_path: /opt/hostedtoolcache/flutter
+#          - os: macos-10.15
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
+#          - os: macos-11.0
+#            flutter_path: /Users/runner/hostedtoolcache/flutter
           - os: macos-latest
             flutter_path: /Users/runner/hostedtoolcache/flutter
+          - os: windows-latest
+            flutter_path: C:\Users\runneradmin\hostedtoolcache\flutter
       fail-fast: false
 
     steps:
@@ -136,12 +156,13 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ matrix.flutter_path }}
-        key: ${{ runner.os }}-flutter
+        key: ${{ matrix.os }}-flutter
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable'
     - name: enabled exp platform
       run: |
+        flutter config --enable-windows-desktop
         flutter config --enable-macos-desktop
     - run: flutter pub get
     # Analyze our Dart code
@@ -152,20 +173,27 @@ jobs:
         name: crypto-target
         path: rust/target
     # Run our tests
-    - run: flutter test
+    - run: flutter test -v
+
+    # Build all example
     - name: build android artifact
-      run: flutter build aar --no-profile --no-release
+      run: flutter build aar --no-profile --no-release -v
 
     - name: build android example
       working-directory: ./example
-      run: flutter build appbundle --target-platform android-arm,android-arm64,android-x64
+      run: flutter build appbundle --target-platform android-arm,android-arm64,android-x64 -v
 
-    - if: matrix.os == 'macos-latest'
+    - if: runner.os == 'macOS'
       name: build ios example
       working-directory: ./example
-      run: flutter build ios --release --no-codesign
+      run: flutter build ios --release --no-codesign -v
 
-    - if: matrix.os == 'macos-latest'
+    - if: runner.os == 'macOS'
       name: build macos example
       working-directory: ./example
-      run: flutter build macos --release
+      run: flutter build macos --release -v
+
+    - if: runner.os == 'Windows'
+      name: build windows example
+      working-directory: ./example
+      run: flutter build windows --release -v
