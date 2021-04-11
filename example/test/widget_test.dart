@@ -6,9 +6,12 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:r_crypto_example/main.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   testWidgets('Verify Nothing', (WidgetTester tester) async {
-    // No test here as it's pure non-ui lib
+    await tester.pumpWidget(HashListScreen());
   });
 }

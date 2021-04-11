@@ -68,6 +68,9 @@ More digest will support soon.
 - macOS
     - x86_64
     - arm64(WIP)
+- Windows
+    - x86_64
+    - x86(Not support now and feature)
 
 ## Example Usage
 
@@ -76,18 +79,22 @@ More digest will support soon.
 ```dart
 import 'package:r_crypto/r_crypto.dart';
 
-//For fixed output length digest
+// For fixed output length digest
 rHash.hashString(HashType.MD5, input);
-//For dynamic output length digest
+// For dynamic output length digest
 rHash.hashString(HashType.blake3(length: 64), input);
-//Also accept List<int> as parameter
+// Also accept List<int> as parameter
 rHash.hashList(HashType.KECCAK_224, [0,1,2]);
-//Hash File
+// Hash File
 rHash.filePath(HashType.blake3(length: 32), path);
 
-//Encode the list
+// Encode the list
 hex.encode(list);
 ```
+
+## Note
+
+- Windows user needs to download the [rcrypto.dll](https://github.com/TinoGuo/r_crypto/releases) and put it in the same folder with *.exe. It's the limitation of the Flutter Windows Plugin now.
 
 ## TODO
 - [x] Support file input
