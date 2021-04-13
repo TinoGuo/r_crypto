@@ -10,13 +10,14 @@ jobs:
   # Set up Flutter for all other tasks.
   setup:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
         include:
-#          - os: ubuntu-latest
-#            flutter_path: /opt/hostedtoolcache/flutter
+          - os: ubuntu-latest
+            flutter_path: /opt/hostedtoolcache/flutter
 #          - os: macos-10.15
 #            flutter_path: /Users/runner/hostedtoolcache/flutter
 #          - os: macos-11.0
@@ -36,11 +37,13 @@ jobs:
           key: ${{ matrix.os }}-flutter
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: 'beta'
+      - run: flutter doctor -v
 
   build-rust-and-test:
     runs-on: ${{ matrix.os }}
     needs: setup
+    timeout-minutes: 30
 
     strategy:
       matrix:
@@ -58,9 +61,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: install mingw-w64
-      run: |
-        brew install mingw-w64
     - name: build and test rust
       run: |
         make init
@@ -80,22 +80,78 @@ jobs:
           rust/target/x86_64-apple-darwin/release/librcrypto.dylib
           rust/target/x86_64-apple-ios/release/librcrypto.a
           rust/target/x86_64-linux-android/release/librcrypto.so
-          rust/target/x86_64-pc-windows-gnu/release/rcrypto.dll
+        retention-days: 1
 
-  publish-artifacts:
+  build-rust-on-windows:
+    runs-on: windows-latest
+    needs: setup
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: build rust
+        run: |
+          rustup target add x86_64-pc-windows-gnu
+          cargo build --target x86_64-pc-windows-gnu --release
+#          rustup target add i686-pc-windows-gnu
+#          rustup install i686-pc-windows-gnu
+#          rustup default i686-pc-windows-gnu
+#          rustup show
+#          cargo build --target i686-pc-windows-gnu --release
+        working-directory: rust
+      - name: upload rust artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: crypto-windows-target
+          path: |
+            rust/target/x86_64-pc-windows-gnu/release/rcrypto.dll
+            rust/target/i686-pc-windows-gnu/release/rcrypto.dll
+          retention-days: 1
+
+  build-rust-on-linux:
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: build rust
+        run: |
+          rustup target add x86_64-unknown-linux-gnu
+          cargo build --target x86_64-unknown-linux-gnu --release
+#          rustup target add i686-unknown-linux-gnu
+#          rustup install stable-i686-unknown-linux-gnu
+#          rustup default stable-i686-unknown-linux-gnu
+#          rustup show
+#          cargo build --target i686-unknown-linux-gnu --release
+        working-directory: rust
+      - name: upload rust artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: crypto-linux-target
+          path: |
+            rust/target/x86_64-unknown-linux-gnu/release/librcrypto.so
+            rust/target/i686-unknown-linux-gnu/release/librcrypto.so
+          retention-days: 1
+
+  publish-windows-artifacts:
     runs-on: ubuntu-latest
     needs: build-rust-and-test
+    timeout-minutes: 15
+
     steps:
-      - name: Checkout
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: Checkout
         uses: actions/checkout@v2
-      - name: download rust target
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: download rust target
         uses: actions/download-artifact@v2
         with:
           name: crypto-target
           path: rust/target
-      - name: Release
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: rust/target/x86_64-pc-windows-gnu/release/rcrypto.dll
         env:
@@ -104,6 +160,7 @@ jobs:
   bench-rust:
     runs-on: ${{ matrix.os }}
     needs: build-rust-and-test
+    timeout-minutes: 60
 
     strategy:
       matrix:
@@ -128,14 +185,15 @@ jobs:
 
   build-flutter-and-test:
     runs-on: ${{ matrix.os }}
-    needs: build-rust-and-test
+    needs: [build-rust-and-test, build-rust-on-linux, build-rust-on-windows]
+    timeout-minutes: 30
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
         include:
-#          - os: ubuntu-latest
-#            flutter_path: /opt/hostedtoolcache/flutter
+          - os: ubuntu-latest
+            flutter_path: /opt/hostedtoolcache/flutter
 #          - os: macos-10.15
 #            flutter_path: /Users/runner/hostedtoolcache/flutter
 #          - os: macos-11.0
@@ -157,29 +215,56 @@ jobs:
       with:
         path: ${{ matrix.flutter_path }}
         key: ${{ matrix.os }}-flutter
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: 'stable'
-    - name: enabled exp platform
-      run: |
-        flutter config --enable-windows-desktop
-        flutter config --enable-macos-desktop
-    - run: flutter pub get
-    # Analyze our Dart code
-    - run: flutter analyze
-    - name: download rust target
+    # Download all targets
+    - name: download mac rust target
       uses: actions/download-artifact@v2
       with:
         name: crypto-target
         path: rust/target
-    # Run our tests
+    - name: download linux rust target
+      uses: actions/download-artifact@v2
+      with:
+        name: crypto-linux-target
+        path: rust/target
+    - name: download windows rust target
+      uses: actions/download-artifact@v2
+      with:
+        name: crypto-windows-target
+        path: rust/target
+
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'beta'
+    - name: enabled exp platform
+      run: |
+        flutter config --enable-windows-desktop
+        flutter config --enable-macos-desktop
+        flutter config --enable-linux-desktop
+
+    # Pub get
+    - name: get dependencies
+      working-directory: ./example
+      run: flutter pub get
+    # Analyze Plugin Dart code
+    - run: flutter analyze
+    # Run plugin tests
     - run: flutter test -v
 
+    - if: runner.os == 'Linux'
+      name: install ninja dependencies
+      id: install-ninja
+      continue-on-error: true
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y ninja-build
+
     # Build all example
-    - name: build android artifact
+    - if: runner.os == 'Linux'
+      name: build android artifact
       run: flutter build aar --no-profile --no-release -v
 
-    - name: build android example
+    - if: runner.os == 'Linux'
+      name: build android example
       working-directory: ./example
       run: flutter build appbundle --target-platform android-arm,android-arm64,android-x64 -v
 
@@ -197,3 +282,9 @@ jobs:
       name: build windows example
       working-directory: ./example
       run: flutter build windows --release -v
+
+    - if: runner.os == 'Linux' && steps.install-ninja.outcome == 'success' && steps.install-ninja.conclusion == 'success'
+      name: build linux example
+      continue-on-error: true
+      working-directory: ./example
+      run: flutter build linux --release -v

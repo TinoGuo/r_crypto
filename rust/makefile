@@ -30,7 +30,6 @@ init:
 	rustup target add aarch64-apple-ios x86_64-apple-ios
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 	rustup target add x86_64-apple-darwin
-	rustup target add i686-pc-windows-gnu x86_64-pc-windows-gnu
 	rustup target add aarch64-apple-darwin
 	@if [ $$(uname) == "Darwin" ] ; then cargo install cargo-lipo ; fi
 	cargo install cbindgen
@@ -41,8 +40,8 @@ init:
 # # RECIPES
 # ##############################################################################
 
-## all: Compile iOS, Android, MacOS and bindings targets
-all: ios android macos windows bindings
+## all: Compile iOS, Android, MacOS, Windows and bindings targets
+all: ios android macos bindings
 
 ## ios: Compile the iOS universal library
 ios: target/universal/release/librcrypto.a
@@ -85,13 +84,6 @@ target/x86_64-apple-darwin/release/librcrypto.dylib: $(SOURCES) ndk-home
 
 ## target/aarch64-apple-darwin/release/librcrypto.dylib: $(SOURCES) ndk-home
 ##	cargo build --target aarch64-apple-darwin --release
-
-## windows: Compile the windows targets
-
-windows: target/x86_64-pc-windows-gnu/release/rcrypto.dll
-
-target/x86_64-pc-windows-gnu/release/rcrypto.dll: $(SOURCES)
-	cargo build --target x86_64-pc-windows-gnu --release
 
 .PHONY: ndk-home
 ndk-home:

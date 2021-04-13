@@ -29,7 +29,7 @@ class ProfileItemWidget extends StatelessWidget {
 class ProfileDetailScreen extends StatefulWidget {
   final ProfileData profileData;
 
-  const ProfileDetailScreen({Key key, @required this.profileData})
+  const ProfileDetailScreen({Key? key, required this.profileData})
       : super(key: key);
 
   @override
@@ -43,8 +43,8 @@ enum LoadState {
 }
 
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
-  String _rustTime;
-  String _dartTime;
+  String? _rustTime;
+  String? _dartTime;
   double _sliderValue = 100000;
   LoadState _loading = LoadState.NOT_STARTED;
 
@@ -114,13 +114,13 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     // To make sure setState works, no idea of the reason why the below line could make setState works.
     await Future.delayed(const Duration(milliseconds: 100));
     if (widget.profileData.rustFunc != null) {
-      int time = await _watchTime(widget.profileData.rustFunc);
+      int time = await _watchTime(widget.profileData.rustFunc!);
       _rustTime = "Rust:$time milliseconds";
     } else {
       _rustTime = "Rust:None";
     }
     if (widget.profileData.dartFunc != null) {
-      int time = await _watchTime(widget.profileData.dartFunc);
+      int time = await _watchTime(widget.profileData.dartFunc!);
       _dartTime = "Dart:$time milliseconds";
     } else {
       _dartTime = "Dart:None";

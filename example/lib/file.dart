@@ -10,7 +10,7 @@ import 'package:r_crypto_example/data.dart';
 class FileItemWidget extends StatelessWidget {
   final ProfileData profileData;
 
-  const FileItemWidget({Key key, this.profileData}) : super(key: key);
+  const FileItemWidget({Key? key, required this.profileData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class FileItemWidget extends StatelessWidget {
 class FileScreen extends StatefulWidget {
   final ProfileData profileData;
 
-  const FileScreen({Key key, this.profileData}) : super(key: key);
+  const FileScreen({Key? key, required this.profileData}) : super(key: key);
 
   @override
   _FileScreenState createState() => _FileScreenState();
@@ -43,7 +43,7 @@ class _FileScreenState extends State<FileScreen> {
   String _file = "";
   HashMode _mode = HashMode.hex;
 
-  int _length;
+  int _length = 0;
   String _key = "";
 
   @override
@@ -72,7 +72,7 @@ class _FileScreenState extends State<FileScreen> {
                   Platform.isLinux ||
                   Platform.isWindows) {
                 var picker = await showOpenPanel();
-                if (picker != null && !picker.canceled) {
+                if (!picker.canceled) {
                   var file = File(picker.paths.single);
                   updateResult(file.path);
                 } else {
@@ -147,9 +147,10 @@ class _FileScreenState extends State<FileScreen> {
     final stopwatch = Stopwatch()..start();
     List<int> tmp;
     if (widget.profileData.rustFunc != null) {
-      tmp = widget.profileData.rustFunc(path);
+      tmp = widget.profileData.rustFunc!(path);
     } else {
-      tmp = widget.profileData.rustExt.rustExtFunc(path, _length, actualKey);
+      tmp = widget.profileData.rustExt?.rustExtFunc(path, _length, actualKey) ??
+          [];
     }
     _time = "${stopwatch.elapsedMilliseconds} mills";
     stopwatch.stop();
@@ -174,9 +175,9 @@ class _FileScreenState extends State<FileScreen> {
               Radio(
                 value: HashMode.hex,
                 groupValue: _mode,
-                onChanged: (HashMode value) {
+                onChanged: (HashMode? value) {
                   setState(() {
-                    _mode = value;
+                    _mode = value!;
                   });
                 },
               ),
@@ -191,9 +192,9 @@ class _FileScreenState extends State<FileScreen> {
               Radio(
                 value: HashMode.list,
                 groupValue: _mode,
-                onChanged: (HashMode value) {
+                onChanged: (HashMode? value) {
                   setState(() {
-                    _mode = value;
+                    _mode = value!;
                   });
                 },
               ),

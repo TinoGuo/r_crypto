@@ -12,17 +12,17 @@ typedef RustExtFunc = List<int> Function(
 
 class RustExt {
   final RustExtFunc rustExtFunc;
-  final int min;
-  final int max;
+  final int? min;
+  final int? max;
 
   const RustExt(this.rustExtFunc, {this.min, this.max});
 }
 
 class ProfileData {
   final String name;
-  final RustFunc rustFunc;
-  final DartFunc dartFunc;
-  final RustExt rustExt;
+  final RustFunc? rustFunc;
+  final DartFunc? dartFunc;
+  final RustExt? rustExt;
   // if less than or equal to 0, means not support key
   final int keyLength;
 
