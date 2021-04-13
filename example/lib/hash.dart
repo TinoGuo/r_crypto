@@ -7,7 +7,7 @@ import 'package:r_crypto_example/data.dart';
 class HashItemWidget extends StatelessWidget {
   final ProfileData profileData;
 
-  const HashItemWidget({Key key, this.profileData}) : super(key: key);
+  const HashItemWidget({Key? key, required this.profileData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class HashItemWidget extends StatelessWidget {
 class HashDataScreen extends StatefulWidget {
   final ProfileData profileData;
 
-  const HashDataScreen({Key key, this.profileData}) : super(key: key);
+  const HashDataScreen({Key? key, required this.profileData}) : super(key: key);
 
   @override
   _HashDataScreenState createState() => _HashDataScreenState();
@@ -49,7 +49,7 @@ class _HashDataScreenState extends State<HashDataScreen> {
           buildRadioGroup(),
           TextField(
             onChanged: (s) {
-              List<int> tmp = widget.profileData.rustFunc(s);
+              List<int> tmp = widget.profileData.rustFunc?.call(s) ?? [];
               if (_mode == HashMode.hex) {
                 _result = hex.encode(tmp);
               } else {
@@ -81,9 +81,9 @@ class _HashDataScreenState extends State<HashDataScreen> {
             leading: Radio(
               value: HashMode.hex,
               groupValue: _mode,
-              onChanged: (HashMode value) {
+              onChanged: (HashMode? value) {
                 setState(() {
-                  _mode = value;
+                  _mode = value!;
                 });
               },
             ),
@@ -95,9 +95,9 @@ class _HashDataScreenState extends State<HashDataScreen> {
             leading: Radio(
               value: HashMode.list,
               groupValue: _mode,
-              onChanged: (HashMode value) {
+              onChanged: (HashMode? value) {
                 setState(() {
-                  _mode = value;
+                  _mode = value!;
                 });
               },
             ),
