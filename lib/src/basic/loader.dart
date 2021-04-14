@@ -7,7 +7,8 @@ import 'package:r_crypto/src/basic/debuggable.dart';
 late final DynamicLibrary nativeLib = _open();
 
 DynamicLibrary _open() {
-  if (Platform.environment.containsKey('FLUTTER_TEST')) {
+  if (Platform.environment.containsKey('FLUTTER_TEST') &&
+      Platform.environment['FLUTTER_TEST'] == 'true') {
     return testLib;
   }
   if (Platform.isMacOS) {

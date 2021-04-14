@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+    tags:
   pull_request:
 
 jobs:
@@ -38,7 +39,6 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
-      - run: flutter doctor -v
 
   build-rust-and-test:
     runs-on: ${{ matrix.os }}
@@ -70,7 +70,7 @@ jobs:
     - name: upload rust artifact
       uses: actions/upload-artifact@v2
       with:
-        name: crypto-target
+        name: crypto-unix-target
         path: |
           rust/target/aarch64-apple-ios/release/librcrypto.a
           rust/target/aarch64-linux-android/release/librcrypto.so
@@ -79,7 +79,6 @@ jobs:
           rust/target/universal/release/librcrypto.a
           rust/target/x86_64-apple-darwin/release/librcrypto.dylib
           rust/target/x86_64-apple-ios/release/librcrypto.a
-          rust/target/x86_64-linux-android/release/librcrypto.so
         retention-days: 1
 
   build-rust-on-windows:
@@ -215,11 +214,11 @@ jobs:
       with:
         path: ${{ matrix.flutter_path }}
         key: ${{ matrix.os }}-flutter
-    # Download all targets
-    - name: download mac rust target
+    # Download targets
+    - name: download unix rust target
       uses: actions/download-artifact@v2
       with:
-        name: crypto-target
+        name: crypto-unix-target
         path: rust/target
     - name: download linux rust target
       uses: actions/download-artifact@v2
@@ -242,21 +241,25 @@ jobs:
         flutter config --enable-linux-desktop
 
     # Pub get
-    - name: get dependencies
+    - name: get example dependencies
       working-directory: ./example
       run: flutter pub get
     # Analyze Plugin Dart code
     - run: flutter analyze
     # Run plugin tests
     - run: flutter test -v
+    # Run example tests
+    - working-directory: ./example
+      run: flutter test -v
 
     - if: runner.os == 'Linux'
       name: install ninja dependencies
-      id: install-ninja
+      id: install-linux-dependencies
       continue-on-error: true
       run: |
         sudo apt-get update -y
         sudo apt-get install -y ninja-build
+        sudo apt-get install build-essential libgtk-3-dev
 
     # Build all example
     - if: runner.os == 'Linux'
@@ -276,15 +279,19 @@ jobs:
     - if: runner.os == 'macOS'
       name: build macos example
       working-directory: ./example
-      run: flutter build macos --release -v
+      run: |
+        flutter build macos --release -v
 
     - if: runner.os == 'Windows'
       name: build windows example
       working-directory: ./example
-      run: flutter build windows --release -v
+      run: |
+        flutter build windows --release -v
+      # copy ..\rust\target\x86_64-pc-windows-gnu\release\rcrypto.dll build\windows\runner\x86_64
 
-    - if: runner.os == 'Linux' && steps.install-ninja.outcome == 'success' && steps.install-ninja.conclusion == 'success'
+    - if: runner.os == 'Linux' && steps.install-linux-dependencies.outcome == 'success' && steps.install-linux-dependencies.conclusion == 'success'
       name: build linux example
       continue-on-error: true
       working-directory: ./example
-      run: flutter build linux --release -v
+      run: |
+        flutter build linux --release -v

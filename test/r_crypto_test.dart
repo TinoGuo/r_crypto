@@ -6,8 +6,6 @@ import 'package:r_crypto/r_crypto.dart';
 import 'package:r_crypto/src/r_crypto_impl.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('verify hash', () {
     test('verify digest', () {
       expect(

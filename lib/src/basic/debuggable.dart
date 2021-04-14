@@ -10,7 +10,7 @@ const String _kLinuxTestLib =
 
 DynamicLibrary get testLib {
   final path = Directory.current;
-  if (path.path.endsWith('test')) {
+  if (path.path.endsWith('example')) {
     return DynamicLibrary.open('../${_getByPlatformFileName()}');
   } else {
     return DynamicLibrary.open(_getByPlatformFileName());
