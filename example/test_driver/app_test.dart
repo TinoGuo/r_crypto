@@ -16,7 +16,7 @@ final expectedData = {
 };
 
 const int _kRetryTime = 3;
-const Timeout _kTimeout = const Timeout(const Duration(seconds: 10));
+const Timeout _kTimeout = const Timeout(const Duration(seconds: 30));
 
 void main() {
   group('digest verify', () {
