@@ -42,12 +42,14 @@ class _HashDataScreenState extends State<HashDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        key: Key('appBar'),
         title: Text(widget.profileData.name),
       ),
       body: ListView(
         children: [
           buildRadioGroup(),
           TextField(
+            key: Key('input'),
             onChanged: (s) {
               List<int> tmp = widget.profileData.rustFunc?.call(s) ?? [];
               if (_mode == HashMode.hex) {
@@ -62,6 +64,7 @@ class _HashDataScreenState extends State<HashDataScreen> {
             padding: const EdgeInsets.all(24.0),
             child: SelectableText(
               _result,
+              key: Key('result'),
               style: TextStyle(fontSize: 20),
             ),
           ),

@@ -287,7 +287,6 @@ jobs:
       working-directory: ./example
       run: |
         flutter build windows --release -v
-      # copy ..\rust\target\x86_64-pc-windows-gnu\release\rcrypto.dll build\windows\runner\x86_64
 
     - if: runner.os == 'Linux' && steps.install-linux-dependencies.outcome == 'success' && steps.install-linux-dependencies.conclusion == 'success'
       name: build linux example
@@ -295,3 +294,21 @@ jobs:
       working-directory: ./example
       run: |
         flutter build linux --release -v
+
+    # driver test
+    - if: runner.os == 'Linux'
+      name: linux driver test
+      working-directory: ./example
+      run: flutter flutter drive --target=test_driver/app.dart -d linux
+
+    - if: runner.os == 'Windows'
+      name: windows driver test
+      working-directory: ./example
+      run: |
+        copy ..\rust\target\x86_64-pc-windows-gnu\release\rcrypto.dll ..\example\build\windows\runner\x86_64
+        flutter flutter drive --target=test_driver/app.dart -d windows
+
+    - if: runner.os == 'MacOS'
+      name: macOS driver test
+      working-directory: ./example
+      run: flutter flutter drive --target=test_driver/app.dart -d macOS
