@@ -358,4 +358,4 @@ jobs:
       - name: "Deploy dry-run"
         run: sh publish.sh
       - name: "Deploy"
-        run sh publish.sh true
+        run: sh publish.sh true
