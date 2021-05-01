@@ -1,6 +1,6 @@
 name: r_crypto
 description: Rust backend support crypto flutter library, much faster than Dart-implementation library, light-weight library. Some crypto support hardware accelerate.
-version: 0.3.0
+version: 0.3.1
 homepage: https://github.com/TinoGuo/r_crypto
 repository: https://github.com/TinoGuo/r_crypto
 
