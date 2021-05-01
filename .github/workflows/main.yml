@@ -333,8 +333,8 @@ jobs:
         id: cache-flutter
         uses: actions/cache@v2
         with:
-          path: ${{ matrix.flutter_path }}
-          key: ${{ matrix.os }}-flutter
+          path: /Users/runner/hostedtoolcache/flutter
+          key: macos-latest-flutter
       # Download targets
       - name: download unix rust target
         uses: actions/download-artifact@v2
