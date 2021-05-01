@@ -1,3 +1,6 @@
+## 0.3.1
+* Support Linux and Windows
+
 ## 0.3.0
 * Migrate to Flutter 2.0 and Dart 2.12
 * Bump [ffi](https://github.com/dart-lang/ffi) version
