@@ -71,6 +71,8 @@ More digest will support soon.
 - Windows
     - x86_64
     - x86(Not support now and feature)
+- Linux
+    - x86_64
 
 ## Example Usage
 
