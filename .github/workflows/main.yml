@@ -320,7 +320,7 @@ jobs:
     timeout-minutes: 30
     if: "startsWith(github.ref, 'refs/tags/')"
 
-    step:
+    steps:
       - uses: actions/checkout@v2'
       - uses: actions/setup-java@v1
         with:
