@@ -361,5 +361,5 @@ jobs:
           echo ${{ secrets.FLUTTER_CRE }} >~/.pub-cache/credentials.json
       - name: "Deploy dry-run"
         run: sh publish.sh
-#      - name: "Deploy"
-#        run: sh publish.sh true
+      - name: "Deploy"
+        run: sh publish.sh true
