@@ -356,6 +356,9 @@ jobs:
         with:
           channel: 'beta'
       - name: "Copy credential"
+        shell: bash
+        env:
+          FLUTTER_CRE: ${{ secrets.FLUTTER_CRE }}
         run: |
           mkdir -p ~/.pub-cache
           echo ${{ secrets.FLUTTER_CRE }} >~/.pub-cache/credentials.json
