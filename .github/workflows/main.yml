@@ -363,3 +363,5 @@ jobs:
         run: sh publish.sh
       - name: "Deploy"
         run: sh publish.sh true
+      - name: "Clean"
+        run: rm -rf ~/.pub-cache
