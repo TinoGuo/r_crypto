@@ -303,13 +303,13 @@ jobs:
       working-directory: ./example
       run: flutter drive --target=test_driver/app.dart -d linux
 
-    - if: runner.os == 'Windows'
-      name: windows driver test
-      continue-on-error: true
-      working-directory: ./example
-      run: |
-        copy ..\rust\target\x86_64-pc-windows-gnu\release\rcrypto.dll ..\example\build\windows\runner\x86_64
-        flutter drive --target=test_driver/app.dart -d windows
+#    - if: runner.os == 'Windows'
+#      name: windows driver test
+#      continue-on-error: true
+#      working-directory: ./example
+#      run: |
+#        copy ..\rust\target\x86_64-pc-windows-gnu\release\rcrypto.dll ..\example\build\windows\runner\x86_64
+#        flutter drive --target=test_driver/app.dart -d windows
 
     - if: runner.os == 'MacOS'
       name: macOS driver test
@@ -363,10 +363,10 @@ jobs:
           PUB_DEV_PUBLISH_TOKEN_ENDPOINT: ${{ secrets.PUB_DEV_PUBLISH_TOKEN_ENDPOINT }}
           PUB_DEV_PUBLISH_EXPIRATION: ${{ secrets.PUB_DEV_PUBLISH_EXPIRATION }}
         run: |
-          sh credential_config.sh
+          sh ./credential_config.sh
       - name: "Deploy dry-run"
-        run: sh publish.sh
+        run: sh ./publish.sh
       - name: "Deploy"
-        run: sh publish.sh true
+        run: sh ./publish.sh true
       - name: "Clean"
         run: rm -rf ~/.pub-cache
