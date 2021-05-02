@@ -365,8 +365,12 @@ jobs:
         run: |
           sh ./credential_config.sh
       - name: "Deploy dry-run"
-        run: sh ./publish.sh
+        run: flutter pub publish --dry-run
       - name: "Deploy"
-        run: sh ./publish.sh true
+        run: |
+          echo start copy
+          cp rust/target/x86_64-apple-darwin/release/librcrypto.dylib macos/librcrypto.dylib
+          echo end copy
+          flutter pub pub publish -f
       - name: "Clean"
         run: rm -rf ~/.pub-cache
