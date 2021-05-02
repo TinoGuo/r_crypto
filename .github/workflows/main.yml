@@ -358,7 +358,7 @@ jobs:
       - name: "Copy credential"
         run: |
           mkdir -p ~/.pub-cache
-          cat <<EOF > ~/.pub-cache/credentials.json ${{ secrets.FLUTTER_CRE }}
+          echo ${{ secrets.FLUTTER_CRE }} >~/.pub-cache/credentials.json
       - name: "Deploy dry-run"
         run: sh publish.sh
 #      - name: "Deploy"
