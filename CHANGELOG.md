@@ -1,3 +1,6 @@
+## 0.4.1
+* Bump Dart to 2.13
+
 ## 0.3.1
 * Support Linux and Windows
 
