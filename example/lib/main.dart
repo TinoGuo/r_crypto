@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:convert/convert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,14 +43,13 @@ class DemoScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => ProfileListScreen()));
               },
             ),
-            if (Platform.isMacOS || Platform.isLinux || Platform.isWindows)
-              ListTile(
-                title: Text('File'),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => FileListScreen()));
-                },
-              ),
+            ListTile(
+              title: Text('File'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => FileListScreen()));
+              },
+            ),
           ],
         ),
       ),
