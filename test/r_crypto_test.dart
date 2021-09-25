@@ -78,11 +78,11 @@ void main() {
             "dcef6fb7908fd52ba26aaba75121526abbf1217f1c0a31024652d134d3e32fb4cd8e9c703b8f43e7277b59a5cd402175"),
       );
       expect(
-        rHash.hashString(HashType.shake(ExtensionHash.Shake128, 10), "hello"),
+        rHash.hashString(HashType.shake(ExtensionHash.shake128, 10), "hello"),
         hex.decode("8eb4b6a932f280335ee1"),
       );
       expect(
-        rHash.hashString(HashType.shake(ExtensionHash.Shake256, 64), "hello"),
+        rHash.hashString(HashType.shake(ExtensionHash.shake256, 64), "hello"),
         hex.decode(
             "1234075ae4a1e77316cf2d8000974581a343b9ebbca7e3d1db83394c30f221626f594e4f0de63902349a5ea5781213215813919f92a4d86d127466e3d07e8be3"),
       );
@@ -92,17 +92,17 @@ void main() {
             "0a25f55d7308eca6b9567a7ed3bd1b46327f0f1ffdc804dd8bb5af40e88d78b88df0d002a89e2fdbd5876c523f1b67bc44e9f87047598e7548298ea1c81cfd73"),
       );
       expect(
-        rHash.hashString(HashType.blake3(), "hello"),
+        rHash.hashString(const HashType.blake3(), "hello"),
         hex.decode(
             "ea8f163db38682925e4491c5e58d4bb3506ef8c14eb78a86e908c5624a67200f"),
       );
       expect(
-        rHash.hashString(HashType.blake3(length: 64), "hello"),
+        rHash.hashString(const HashType.blake3(length: 64), "hello"),
         hex.decode(
             "ea8f163db38682925e4491c5e58d4bb3506ef8c14eb78a86e908c5624a67200fe992405f0d785b599a2e3387f6d34d01faccfeb22fb697ef3fd53541241a338c"),
       );
       expect(
-        rHash.hashString(HashType.blake3(), "hello",
+        rHash.hashString(const HashType.blake3(), "hello",
             key: "01234567890123456789012345678901"),
         hex.decode(
             "a90d00da3185ee3b0212f04238f9fad58199dc63ab71c5f1968d9b03d681919b"),
@@ -128,13 +128,13 @@ void main() {
       );
       expect(
         rHash.hashString(
-            HashType.groestlDynamic(ExtensionHash.GroestlBig, 64), ""),
+            HashType.groestlDynamic(ExtensionHash.groestlBig, 64), ""),
         hex.decode(
             "6d3ad29d279110eef3adbd66de2a0345a77baede1557f5d099fce0c03d6dc2ba8e6d4a6633dfbd66053c20faa87d1a11f39a7fbe4a6c2f009801370308fc4ad8"),
       );
       expect(
         rHash.hashString(
-            HashType.groestlDynamic(ExtensionHash.GroestlSmall, 32), ""),
+            HashType.groestlDynamic(ExtensionHash.groestlSmall, 32), ""),
         hex.decode(
             "1a52d11d550039be16107f9c58db9ebcc417f16f736adb2502567119f0083467"),
       );
@@ -166,13 +166,13 @@ void main() {
             "960314edd29daaaf71e2637f50a221201bf8d6a7f2fbd6487b306ea47f5aa70a122e9e7a23221fa97480e723ac2b3aa2786937ea44aa6fdefa1daebe4b27fbbc"),
       );
       expect(
-        rHash.hashString(HashType.blake2(ExtensionHash.Blake2b, 64), "hello"),
+        rHash.hashString(HashType.blake2(ExtensionHash.blake2b, 64), "hello"),
         hex.decode(
             "e4cfa39a3d37be31c59609e807970799caa68a19bfaa15135f165085e01d41a65ba1e1b146aeb6bd0092b49eac214c103ccfa3a365954bbbe52f74a2b3620c94"),
       );
       expect(
         rHash.hashString(
-          HashType.blake2(ExtensionHash.Blake2b, 64),
+          HashType.blake2(ExtensionHash.blake2b, 64),
           "hello",
           salt: utf8.decode([0, 1, 2]),
         ),
@@ -180,7 +180,7 @@ void main() {
             "145f3c6814436c246f00e5f9ac50f8f651d134be36c51653330620e158aa006b78c5029c1d6025610796ddcaf6dd0b933367b3165749872b5c297af9a4000c9b"),
       );
       expect(
-        rHash.hashString(HashType.blake2(ExtensionHash.Blake2s, 32), "hello"),
+        rHash.hashString(HashType.blake2(ExtensionHash.blake2s, 32), "hello"),
         hex.decode(
             "19213bacc58dee6dbde3ceb9a47cbb330b3d86f8cca8997eb00be456f140ca25"),
       );
@@ -188,7 +188,7 @@ void main() {
 
     test('should panic', () {
       expect(() {
-        HashType.blake2(ExtensionHash.Blake2s, 33);
+        HashType.blake2(ExtensionHash.blake2s, 33);
       }, throwsAssertionError);
     });
   });

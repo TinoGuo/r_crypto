@@ -6,7 +6,7 @@ class RustError extends Error {
 
   /// Read error message from [error]
   factory RustError(int error) {
-    var message;
+    late String message;
     switch (error) {
       case -1:
         message = "The path is invalid";

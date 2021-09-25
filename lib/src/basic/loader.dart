@@ -69,7 +69,9 @@ class _Loader {
   }
 
   void freeCStrings(List<Pointer<Utf8>> pointerList) {
-    pointerList.forEach((element) => freeCString(element));
+    for (Pointer<Utf8> element in pointerList) {
+      freeCString(element);
+    }
   }
 
   void freePointer<T extends NativeType>(Pointer<T> pointer) {
@@ -77,7 +79,9 @@ class _Loader {
   }
 
   void freePointerList<T extends NativeType>(List<Pointer<T>> pointerList) {
-    pointerList.forEach((element) => calloc.free(element));
+    for (Pointer<T> element in pointerList) {
+      calloc.free(element);
+    }
   }
 }
 

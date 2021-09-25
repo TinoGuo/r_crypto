@@ -1,3 +1,7 @@
+## 0.5.0 - 2021/09/25
+* Apply Analyze and Lint
+* Fix iOS *symbol not found* in profile and release mode
+
 ## 0.4.1
 * Bump Dart to 2.13
 
