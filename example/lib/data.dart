@@ -148,7 +148,7 @@ var fileList = [
     'SHAKE_128',
     rustExt: RustExt(
       (input, length, key) =>
-          rHash.filePath(HashType.shake(ExtensionHash.Shake128, length), input),
+          rHash.filePath(HashType.shake(ExtensionHash.shake128, length), input),
       min: 1,
       max: INT_MAX,
     ),
@@ -157,7 +157,7 @@ var fileList = [
     'SHAKE_256',
     rustExt: RustExt(
       (input, length, key) =>
-          rHash.filePath(HashType.shake(ExtensionHash.Shake256, length), input),
+          rHash.filePath(HashType.shake(ExtensionHash.shake256, length), input),
       min: 1,
       max: INT_MAX,
     ),
@@ -186,7 +186,7 @@ var fileList = [
     'Groestl_Big',
     rustExt: RustExt(
       (input, length, key) => rHash.filePath(
-          HashType.groestlDynamic(ExtensionHash.GroestlBig, length), input),
+          HashType.groestlDynamic(ExtensionHash.groestlBig, length), input),
       min: 33,
       max: 64,
     ),
@@ -195,7 +195,7 @@ var fileList = [
     'Groestl_Small',
     rustExt: RustExt(
       (input, length, key) => rHash.filePath(
-          HashType.groestlDynamic(ExtensionHash.GroestlSmall, length), input),
+          HashType.groestlDynamic(ExtensionHash.groestlSmall, length), input),
       min: 1,
       max: 32,
     ),
