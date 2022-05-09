@@ -43,7 +43,7 @@ jobs:
           key: ${{ matrix.os }}-flutter
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'beta'
+          channel: 'stable'
 
   build-rust-and-test:
     runs-on: ${{ matrix.os }}
@@ -236,7 +236,7 @@ jobs:
 
     - uses: subosito/flutter-action@v1
       with:
-        channel: 'beta'
+        channel: 'stable'
     - name: enabled exp platform
       run: |
         flutter config --enable-windows-desktop
@@ -356,7 +356,7 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'beta'
+          channel: 'stable'
       - name: "Copy credential"
         shell: bash
         env:
