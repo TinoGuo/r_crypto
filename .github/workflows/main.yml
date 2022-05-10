@@ -210,7 +210,8 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-java@v3
       with:
-        java-version: '11.x'
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '11'
     - name: Cache Flutter
       id: cache-flutter
       uses: actions/cache@v3
@@ -330,7 +331,8 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
-          java-version: '11.x'
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '11'
       - name: Cache Flutter
         id: cache-flutter
         uses: actions/cache@v3
