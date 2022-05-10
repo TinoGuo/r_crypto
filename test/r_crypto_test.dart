@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:r_crypto/r_crypto.dart';
-import 'package:r_crypto/src/r_crypto_impl.dart';
 
 void main() {
   group('verify hash', () {

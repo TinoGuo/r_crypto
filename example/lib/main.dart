@@ -1,5 +1,4 @@
 import 'package:convert/convert.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:r_crypto_example/data.dart';
 import 'package:r_crypto_example/file.dart';

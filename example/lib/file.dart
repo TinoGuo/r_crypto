@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:convert/convert.dart';
 import 'package:file_chooser/file_chooser.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:r_crypto_example/data.dart';
