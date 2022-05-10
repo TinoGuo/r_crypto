@@ -28,7 +28,7 @@ dependencies:
 
   file_chooser:
     git:
-      url: git://github.com/google/flutter-desktop-embedding.git
+      url: https://github.com/google/flutter-desktop-embedding
       path: plugins/file_chooser
       ref: 040f36c
   file_picker: ^4.0.3
