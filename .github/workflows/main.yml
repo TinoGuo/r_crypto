@@ -273,7 +273,7 @@ jobs:
     - if: runner.os == 'Linux'
       name: build android example
       working-directory: ./example
-      run: flutter build appbundle --target-platform android-arm,android-arm64,android-x64 -v
+      run: flutter build appbundle --release -v
 
     - if: runner.os == 'macOS'
       name: build ios example
