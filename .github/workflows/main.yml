@@ -67,11 +67,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: nttld/setup-ndk@v1
-      id: setup-ndk
-      with:
-        ndk-version: r22b
-        add-to-path: true
     - name: build and test rust
       run: |
         make init
