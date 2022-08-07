@@ -20,9 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        # https://github.com/bbqsrc/cargo-ndk/issues/22
-        # skip macos-latest until the issue resolved
-        os: [windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
             flutter_path: /opt/hostedtoolcache/flutter
