@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:r_crypto/src/basic/debuggable.dart';
 
-late final DynamicLibrary nativeLib = _open();
+final DynamicLibrary nativeLib = _open();
 
 DynamicLibrary _open() {
   if (Platform.environment.containsKey('FLUTTER_TEST') &&
