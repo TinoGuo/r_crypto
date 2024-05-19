@@ -1,3 +1,6 @@
+## 0.5.1 - 2024/05/19
+* Bump dependency
+
 ## 0.5.0 - 2021/09/25
 * Apply Analyze and Lint
 * Fix iOS *symbol not found* in profile and release mode

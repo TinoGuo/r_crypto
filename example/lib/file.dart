@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:convert/convert.dart';
-import 'package:file_chooser/file_chooser.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:r_crypto_example/data.dart';
@@ -66,27 +63,13 @@ class _FileScreenState extends State<FileScreen> {
           buildRadioGroup(),
           ElevatedButton(
             onPressed: () async {
-              if (Platform.isAndroid || Platform.isIOS) {
-                // No Op
-                FilePickerResult? result =
-                    await FilePicker.platform.pickFiles();
-                if (result != null) {
-                  var file = File(result.files.single.path ?? "");
-                  updateResult(file.path);
-                }
-                setState(() {});
-              } else if (Platform.isMacOS ||
-                  Platform.isLinux ||
-                  Platform.isWindows) {
-                var picker = await showOpenPanel();
-                if (!picker.canceled) {
-                  var file = File(picker.paths.single);
-                  updateResult(file.path);
-                } else {
-                  _result = "";
-                  _time = "";
-                  _file = "";
-                }
+              final picker = await openFile();
+              if (picker != null) {
+                updateResult(picker.path);
+              } else {
+                _result = "";
+                _time = "";
+                _file = "";
               }
               setState(() {});
             },

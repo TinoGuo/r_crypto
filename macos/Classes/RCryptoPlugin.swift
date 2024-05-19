@@ -7,6 +7,6 @@ public class RCryptoPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    result(nil)
+
   }
 }

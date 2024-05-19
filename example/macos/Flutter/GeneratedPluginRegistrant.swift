@@ -5,10 +5,10 @@
 import FlutterMacOS
 import Foundation
 
-import file_chooser
+import file_selector_macos
 import r_crypto
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  FileChooserPlugin.register(with: registry.registrar(forPlugin: "FileChooserPlugin"))
+  FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
   RCryptoPlugin.register(with: registry.registrar(forPlugin: "RCryptoPlugin"))
 }
