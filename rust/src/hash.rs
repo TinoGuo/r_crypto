@@ -34,8 +34,12 @@ macro_rules! hash_data_blake2 {
     $input_len: expr,
     $output: expr,
     $output_len: expr) => {{
+        use digest::Digest;
         use blake2::digest::Update;
         use blake2::digest::VariableOutput;
+        use digest::core_api::VariableOutputCore;
+        use digest::Output;
+        use digest::core_api::Buffer;
 
         assert!($output_len % 8 == 0);
         let persona = if !$persona.is_null() && $persona_len > 0 {
@@ -55,9 +59,10 @@ macro_rules! hash_data_blake2 {
         };
         let input = unsafe { std::slice::from_raw_parts($input, $input_len as usize) };
         let result = unsafe { std::slice::from_raw_parts_mut($output, $output_len as usize) };
-        let mut blake2 = $blake::with_params(key, salt, persona, $output_len as usize);
-        blake2.update(input);
-        blake2.finalize_variable(|res| result.copy_from_slice(res));
+        let mut blake2 = $blake::new_with_params(salt, persona, $key_len as usize, $output_len as usize);
+        let output_ref = Output::<$blake>::from_mut_slice(result);
+        let input_ref = &mut Buffer::<$blake>::new(input);
+        blake2.finalize_variable_core(input_ref, output_ref);
         SUCCESS
     }};
 }
@@ -77,12 +82,12 @@ pub extern "C" fn hash_data(
     output_len: u32,
 ) -> i32 {
     use crate::constants::*;
-    use blake2::{VarBlake2b, VarBlake2s};
+    use blake2::{Blake2bVarCore, Blake2sVarCore};
     use groestl::{Groestl224, Groestl256, Groestl384, Groestl512};
     use md5::Md5;
-    use ripemd160::Ripemd160;
+    use ripemd::Ripemd160;
     use sha1::Sha1;
-    use sha2::{Digest, Sha224, Sha256, Sha384, Sha512, Sha512Trunc224, Sha512Trunc256};
+    use sha2::{Digest, Sha224, Sha256, Sha384, Sha512, Sha512_224, Sha512_256};
     use sha3::{
         Keccak224, Keccak256, Keccak384, Keccak512, Sha3_224, Sha3_256, Sha3_384, Sha3_512,
     };
@@ -97,10 +102,10 @@ pub extern "C" fn hash_data(
         TYPE_SHA384 => hash_data_fixed!(Sha384, input, input_len, output, output_len, 48),
         TYPE_SHA512 => hash_data_fixed!(Sha512, input, input_len, output, output_len, 64),
         TYPE_SHA512_TRUNC224 => {
-            hash_data_fixed!(Sha512Trunc224, input, input_len, output, output_len, 28)
+            hash_data_fixed!(Sha512_224, input, input_len, output, output_len, 28)
         }
         TYPE_SHA512_TRUNC256 => {
-            hash_data_fixed!(Sha512Trunc256, input, input_len, output, output_len, 32)
+            hash_data_fixed!(Sha512_256, input, input_len, output, output_len, 32)
         }
         TYPE_SHA3_224 => hash_data_fixed!(Sha3_224, input, input_len, output, output_len, 28),
         TYPE_SHA3_256 => hash_data_fixed!(Sha3_256, input, input_len, output, output_len, 32),
@@ -122,7 +127,7 @@ pub extern "C" fn hash_data(
         TYPE_SHABAL_384 => hash_data_fixed!(Shabal384, input, input_len, output, output_len, 48),
         TYPE_SHABAL_512 => hash_data_fixed!(Shabal512, input, input_len, output, output_len, 64),
         TYPE_BLAKE2B => hash_data_blake2!(
-            VarBlake2b,
+            Blake2bVarCore,
             persona,
             persona_len,
             salt,
@@ -135,7 +140,7 @@ pub extern "C" fn hash_data(
             output_len
         ),
         TYPE_BLAKE2S => hash_data_blake2!(
-            VarBlake2s,
+            Blake2sVarCore,
             persona,
             persona_len,
             salt,
@@ -190,26 +195,26 @@ pub extern "C" fn hash_data(
             output.fill(res);
             SUCCESS
         }
-        TYPE_GROESTL_BIG => {
+        TYPE_GROESTL_LONG => {
             use groestl::digest::Update;
             use groestl::digest::VariableOutput;
             assert!(output_len > 32 && output_len <= 64);
             let src = unsafe { std::slice::from_raw_parts(input, input_len as usize) };
             let res = unsafe { std::slice::from_raw_parts_mut(output, output_len as usize) };
-            let mut hasher = groestl::GroestlBig::new(output_len as usize).unwrap();
+            let mut hasher = groestl::GroestlLongVar::new(output_len as usize).unwrap();
             hasher.update(src);
-            hasher.finalize_variable(|s| res.copy_from_slice(s));
+            hasher.finalize_variable(res).unwrap();
             SUCCESS
         }
-        TYPE_GROESTL_SMALL => {
+        TYPE_GROESTL_SHORT => {
             use groestl::digest::Update;
             use groestl::digest::VariableOutput;
             assert!(output_len > 0 && output_len <= 32);
             let src = unsafe { std::slice::from_raw_parts(input, input_len as usize) };
             let res = unsafe { std::slice::from_raw_parts_mut(output, output_len as usize) };
-            let mut hasher = groestl::GroestlSmall::new(output_len as usize).unwrap();
+            let mut hasher = groestl::GroestlShortVar::new(output_len as usize).unwrap();
             hasher.update(src);
-            hasher.finalize_variable(|s| res.copy_from_slice(s));
+            hasher.finalize_variable(res).unwrap();
             SUCCESS
         }
         _ => HASH_TYPE_INVALID,
@@ -708,7 +713,7 @@ mod test_hash {
         let input = "".as_bytes();
         let mut output = [0u8; 32];
         let result = simple_hash!(
-            TYPE_GROESTL_BIG,
+            TYPE_GROESTL_LONG,
             input.as_ptr(),
             input.len() as u32,
             output.as_mut_ptr(),
@@ -724,7 +729,7 @@ mod test_hash {
         let input = "".as_bytes();
         let mut output = [0u8; 65];
         let result = simple_hash!(
-            TYPE_GROESTL_BIG,
+            TYPE_GROESTL_LONG,
             input.as_ptr(),
             input.len() as u32,
             output.as_mut_ptr(),
@@ -739,7 +744,7 @@ mod test_hash {
         let input = "".as_bytes();
         let mut output = [0u8; 64];
         let result = simple_hash!(
-            TYPE_GROESTL_BIG,
+            TYPE_GROESTL_LONG,
             input.as_ptr(),
             input.len() as u32,
             output.as_mut_ptr(),
@@ -755,7 +760,7 @@ mod test_hash {
         let input = "".as_bytes();
         let mut output = [0u8; 0];
         let result = simple_hash!(
-            TYPE_GROESTL_SMALL,
+            TYPE_GROESTL_SHORT,
             input.as_ptr(),
             input.len() as u32,
             output.as_mut_ptr(),
@@ -771,7 +776,7 @@ mod test_hash {
         let input = "".as_bytes();
         let mut output = [0u8; 33];
         let result = simple_hash!(
-            TYPE_GROESTL_SMALL,
+            TYPE_GROESTL_SHORT,
             input.as_ptr(),
             input.len() as u32,
             output.as_mut_ptr(),
@@ -786,7 +791,7 @@ mod test_hash {
         let input = "".as_bytes();
         let mut output = [0u8; 32];
         let result = simple_hash!(
-            TYPE_GROESTL_SMALL,
+            TYPE_GROESTL_SHORT,
             input.as_ptr(),
             input.len() as u32,
             output.as_mut_ptr(),
