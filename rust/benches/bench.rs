@@ -145,11 +145,11 @@ fn groestl_512_bench(b: &mut Criterion) {
 }
 
 fn groestl_big_bench(b: &mut Criterion) {
-    hash_bench!("groestl_big", constants::TYPE_GROESTL_BIG, 64, b)
+    hash_bench!("groestl_big", constants::TYPE_GROESTL_LONG, 64, b)
 }
 
 fn groestl_small_bench(b: &mut Criterion) {
-    hash_bench!("groestl_small", constants::TYPE_GROESTL_SMALL, 32, b)
+    hash_bench!("groestl_small", constants::TYPE_GROESTL_SHORT, 32, b)
 }
 
 fn ripemd160_bench(b: &mut Criterion) {
